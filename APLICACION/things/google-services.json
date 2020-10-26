@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "254510377269",
+    "firebase_url": "https://proyecto-nevera.firebaseio.com",
+    "project_id": "proyecto-nevera",
+    "storage_bucket": "proyecto-nevera.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:254510377269:android:2f51cf99a410aa0395447c",
+        "android_client_info": {
+          "package_name": "com.example.vicoscor.things"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "254510377269-0htkvr6j44pf644rm1301c2crs3vo2dr.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.vicoscor.things",
+            "certificate_hash": "2e41123b67fefb591d8a3b5438d67657343a13e9"
+          }
+        },
+        {
+          "client_id": "254510377269-cgelejrbv4362fhr9ohju9857jbc515q.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD6KITE0_AnJXplBz_z6B8pDV75B2oIUA0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "254510377269-cgelejrbv4362fhr9ohju9857jbc515q.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
