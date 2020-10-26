@@ -4,6 +4,12 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.util.Log;
 
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreSettings;
+
+import java.util.HashMap;
+import java.util.Map;
+
 import androidx.annotation.Nullable;
 
 public class MainActivityUART extends Activity
@@ -18,6 +24,14 @@ public class MainActivityUART extends Activity
         Log.i(TAG, "Lista de UART disponibles: " + ArduinoUart.disponibles());
         uart = new ArduinoUart("UART0", 115200);
 
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        FirebaseFirestoreSettings settings = new FirebaseFirestoreSettings.Builder()
+                .setTimestampsInSnapshotsEnabled(true)
+                .build();
+        db.setFirestoreSettings(settings);
+
+        Map<String, Object> dato = new HashMap<>();
+
         //--RECIBIR SENSOR MAGNETICO POR UART
         Log.d(TAG, "Mandado a Arduino: M");
         uart.escribir("M");
@@ -30,6 +44,8 @@ public class MainActivityUART extends Activity
 
         String magnetico = uart.leer();
         Log.d(TAG, "Recibido de Arduino: "+magnetico);
+
+        dato.put("magnetico", magnetico);
 
 
 
@@ -45,6 +61,12 @@ public class MainActivityUART extends Activity
 
         String id = uart.leer();
         Log.d(TAG, "Recibido de Arduino: "+id);
+
+        dato.put("id", id);
+
+
+
+        db.collection("SENSORES").document("Sensores").set(dato);
     }
 
 
