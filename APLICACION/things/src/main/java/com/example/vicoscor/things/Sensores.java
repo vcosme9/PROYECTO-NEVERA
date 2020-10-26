@@ -8,6 +8,7 @@ public class Sensores  extends Activity {
     private String id;
     private double humedad;
     private double temperatura;
+    private String camara;
 
     public Sensores(String magnetico, String id) {
         Magnetico = magnetico;
