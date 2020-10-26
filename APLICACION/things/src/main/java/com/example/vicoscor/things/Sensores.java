@@ -9,9 +9,10 @@ public class Sensores {
     private double numeros;
 
 
-    public Sensores(String fecha, String palabras) {
-        this.fecha = fecha;
+    public Sensores(String palabras,String fecha) {
+
         this.palabras = palabras;
+        this.fecha = fecha;
     }
 
     public String getFecha() {
