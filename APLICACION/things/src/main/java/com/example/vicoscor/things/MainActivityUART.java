@@ -32,40 +32,32 @@ public class MainActivityUART extends Activity
 
         Map<String, Object> dato = new HashMap<>();
 
-        //--RECIBIR SENSOR MAGNETICO POR UART
-        Log.d(TAG, "Mandado a Arduino: M");
-        uart.escribir("M");
-
+        //---RECIBIR FECHA POR UART
+        Log.d(TAG, "Mandado a Arduino: H");
+        uart.escribir("H");
         try {
             Thread.sleep(10000);
         } catch (InterruptedException e) {
             Log.w(TAG, "Error en sleep()", e);
         }
+        String fecha = uart.leer();
+        Log.d(TAG, "Recibido de Arduino: "+fecha);
 
+        //---RECIBIR SENSOR MAGNETICO POR UART
+        Log.d(TAG, "Mandado a Arduino: M");
+        uart.escribir("M");
+        try {
+            Thread.sleep(10000);
+        } catch (InterruptedException e) {
+            Log.w(TAG, "Error en sleep()", e);
+        }
         String magnetico = uart.leer();
         Log.d(TAG, "Recibido de Arduino: "+magnetico);
 
-        dato.put("magnetico", magnetico);
+        Sensores sensorMagnetico = new Sensores(magnetico,fecha);
 
-
-
-        //--RECIBIR SENSOR RFID POR UART
-        Log.d(TAG, "Mandado a Arduino: I");
-        uart.escribir("I");
-
-        try {
-            Thread.sleep(10000);
-        } catch (InterruptedException e) {
-            Log.w(TAG, "Error en sleep()", e);
-        }
-
-        String id = uart.leer();
-        Log.d(TAG, "Recibido de Arduino: "+id);
-
-        dato.put("id", id);
-
-
-
+        dato.put("Magnetico", sensorMagnetico);
+        
         db.collection("SENSORES").document("Sensores").set(dato);
     }
 
