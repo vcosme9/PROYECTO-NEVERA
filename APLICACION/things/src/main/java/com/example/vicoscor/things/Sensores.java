@@ -15,6 +15,12 @@ public class Sensores {
         this.fecha = fecha;
     }
 
+    public Sensores(double numeros,String fecha) {
+
+        this.numeros = numeros;
+        this.fecha = fecha;
+    }
+
     public String getFecha() {
         return fecha;
     }
