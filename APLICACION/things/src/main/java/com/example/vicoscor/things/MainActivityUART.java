@@ -54,9 +54,22 @@ public class MainActivityUART extends Activity
         String magnetico = uart.leer();
         Log.d(TAG, "Recibido de Arduino: "+magnetico);
 
+        //---RECIBIR SENSOR RFID POR UART
+        Log.d(TAG, "Mandado a Arduino: I");
+        uart.escribir("I");
+        try {
+            Thread.sleep(10000);
+        } catch (InterruptedException e) {
+            Log.w(TAG, "Error en sleep()", e);
+        }
+        String id = uart.leer();
+        Log.d(TAG, "Recibido de Arduino: "+magnetico);
+
+        Sensores sensorRFID = new Sensores(id,fecha);
         Sensores sensorMagnetico = new Sensores(magnetico,fecha);
 
         dato.put("Magnetico", sensorMagnetico);
+        dato.put("ID", sensorRFID);
         
         db.collection("SENSORES").document("Sensores").set(dato);
     }

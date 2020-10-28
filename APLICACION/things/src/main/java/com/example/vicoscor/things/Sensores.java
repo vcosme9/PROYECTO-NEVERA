@@ -6,18 +6,10 @@ public class Sensores {
 
     private String fecha;
     private String palabras;
-    private double numeros;
-
 
     public Sensores(String palabras,String fecha) {
 
         this.palabras = palabras;
-        this.fecha = fecha;
-    }
-
-    public Sensores(double numeros,String fecha) {
-
-        this.numeros = numeros;
         this.fecha = fecha;
     }
 
@@ -35,13 +27,5 @@ public class Sensores {
 
     public void setPalabras(String palabras) {
         this.palabras = palabras;
-    }
-
-    public double getNumeros() {
-        return numeros;
-    }
-
-    public void setNumeros(double numeros) {
-        this.numeros = numeros;
     }
 }

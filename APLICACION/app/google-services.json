@@ -1,42 +1,79 @@
 {
   "project_info": {
-    "project_number": "254510377269",
-    "firebase_url": "https://proyecto-nevera.firebaseio.com",
-    "project_id": "proyecto-nevera",
-    "storage_bucket": "proyecto-nevera.appspot.com"
+    "project_number": "116548137249",
+    "firebase_url": "https://proyecto-nevera-121cb.firebaseio.com",
+    "project_id": "proyecto-nevera-121cb",
+    "storage_bucket": "proyecto-nevera-121cb.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:254510377269:android:2f51cf99a410aa0395447c",
+        "mobilesdk_app_id": "1:116548137249:android:97ece08d952adf3bacce60",
         "android_client_info": {
-          "package_name": "com.example.vicoscor.things"
+          "package_name": "com.example.vicoscor.app"
         }
       },
       "oauth_client": [
         {
-          "client_id": "254510377269-0htkvr6j44pf644rm1301c2crs3vo2dr.apps.googleusercontent.com",
+          "client_id": "116548137249-jb0eunr7eknoqn80sjalspe1frdfn6jl.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
-            "package_name": "com.example.vicoscor.things",
-            "certificate_hash": "2e41123b67fefb591d8a3b5438d67657343a13e9"
+            "package_name": "com.example.vicoscor.app",
+            "certificate_hash": "5cb60ce60aa045a5a241340c1f17a8826e979fa0"
           }
         },
         {
-          "client_id": "254510377269-cgelejrbv4362fhr9ohju9857jbc515q.apps.googleusercontent.com",
+          "client_id": "116548137249-ec5sssvo4tumfvssq0ci8kpottmph77e.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyD6KITE0_AnJXplBz_z6B8pDV75B2oIUA0"
+          "current_key": "AIzaSyC4SC0fUDt9Lq7L7CDlzpJRuBbfheVp01w"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "254510377269-cgelejrbv4362fhr9ohju9857jbc515q.apps.googleusercontent.com",
+              "client_id": "116548137249-ec5sssvo4tumfvssq0ci8kpottmph77e.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:116548137249:android:8084efcf33d1f600acce60",
+        "android_client_info": {
+          "package_name": "com.example.vicoscor.things"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "116548137249-at7k27aif052ocfdghq79fnkb9f3lp8f.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.vicoscor.things",
+            "certificate_hash": "5cb60ce60aa045a5a241340c1f17a8826e979fa0"
+          }
+        },
+        {
+          "client_id": "116548137249-ec5sssvo4tumfvssq0ci8kpottmph77e.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC4SC0fUDt9Lq7L7CDlzpJRuBbfheVp01w"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "116548137249-ec5sssvo4tumfvssq0ci8kpottmph77e.apps.googleusercontent.com",
               "client_type": 3
             }
           ]
