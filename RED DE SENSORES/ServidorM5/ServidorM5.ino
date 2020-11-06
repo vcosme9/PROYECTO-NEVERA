@@ -10,7 +10,7 @@
 #define BLANCO 0XFFFF
 #define NEGRO 0
 
-const int RST_PIN = 2;            // Pin 9 para el reset del RC522
+const int RST_PIN = 5;            // Pin 9 para el reset del RC522
 const int SS_PIN = 21;            // Pin 21 para el SS (SDA) del RC522
 MFRC522 mfrc522(SS_PIN, RST_PIN);   // Crear instancia del MFRC522
 
@@ -39,7 +39,9 @@ void loop() {
   //MOSTRAR POR PANTALLA EN M5STACK
   M5.Lcd.setCursor(0, 10); //posicion del texto
   M5.Lcd.setTextColor(BLANCO); //color del texto
+  M5.Lcd.println(hora); //muestra el resultado del sensor
   M5.Lcd.println("Magnetico: " + magnetico); //muestra el resultado del sensor
+  M5.Lcd.println("ID: " + ID); //muestra el resultado del sensor
   delay(1000);
   M5.Lcd.fillScreen(NEGRO); //borra la pantalla
 
@@ -51,10 +53,10 @@ void loop() {
         Serial.println(magnetico);
         break;
       case 'H': //Si recibe H se envia la hora
-        Serial.print(hora);
+        Serial.println(hora);
         break;
       case 'I': //Si recibe I se envia la ID
-        Serial.print(ID);
+        Serial.println(ID);
         break;
         delay(1000);
     }

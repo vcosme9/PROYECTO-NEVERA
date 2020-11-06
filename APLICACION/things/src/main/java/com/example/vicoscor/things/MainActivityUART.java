@@ -30,8 +30,6 @@ public class MainActivityUART extends Activity
                 .build();
         db.setFirestoreSettings(settings);
 
-        Map<String, Object> dato = new HashMap<>();
-
         //---RECIBIR FECHA POR UART
         Log.d(TAG, "Mandado a Arduino: H");
         uart.escribir("H");
@@ -63,15 +61,18 @@ public class MainActivityUART extends Activity
             Log.w(TAG, "Error en sleep()", e);
         }
         String id = uart.leer();
-        Log.d(TAG, "Recibido de Arduino: "+magnetico);
+        Log.d(TAG, "Recibido de Arduino: "+id);
 
-        Sensores sensorRFID = new Sensores(id,fecha);
-        Sensores sensorMagnetico = new Sensores(magnetico,fecha);
+        //---SUBIR DATOS DE LOS SENSORES A FIREBASE
+        Map<String, Object> sensorMagnetico = new HashMap<>();
+        sensorMagnetico.put("Magnetico", magnetico);
+        sensorMagnetico.put("Fecha", fecha);
+        db.collection("SENSORES").document("Sensor_Magnetico").set(sensorMagnetico);
 
-        dato.put("Magnetico", sensorMagnetico);
-        dato.put("ID", sensorRFID);
-        
-        db.collection("SENSORES").document("Sensores").set(dato);
+        Map<String, Object> sensorID = new HashMap<>();
+        sensorID.put("ID", id);
+        sensorID.put("Fecha", fecha);
+        db.collection("SENSORES").document("Sensor_RFID").set(sensorID);
     }
 
 
