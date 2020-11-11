@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/op1"
+        android:icon="@drawable/ic_custom_menu_user"
+        android:title="Mi cuenta"></item>
+    <item android:title="Mi Nevera"
+        android:icon="@drawable/ic_custom_menu_contactless"
+        android:id="@+id/op2"></item>
+    <item
+        android:id="@+id/op3"
+        android:icon="@drawable/ic_custom_menu_equalizer"
+        android:title="Clasificaciones"></item>
+    <item
+        android:id="@+id/op4"
+        android:icon="@drawable/ic_custom_menu_star"
+        android:title="Mis Favoritos"></item>
+    <item
+        android:title="">
+    </item>
+    <group
+        android:id="@+id/grp1"
+        android:checkableBehavior="single">
+        <menu>
+            <item
+                android:id="@+id/other1"
+                android:icon="@drawable/ic_custom_menu_info"
+                android:title="Ayuda"></item>
+            <item
+                android:id="@+id/exit"
+                android:icon="@android:drawable/ic_menu_revert"
+                android:title="Cerrar sesión"></item>
+        </menu>
+    </group>
+</menu>
