@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "86570230949",
+    "firebase_url": "https://things-nevera.firebaseio.com",
+    "project_id": "things-nevera",
+    "storage_bucket": "things-nevera.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:86570230949:android:1d14fca9aa5885ef43194c",
+        "android_client_info": {
+          "package_name": "com.example.vicoscor.andoridthings"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "86570230949-oatbk726i7fl6cs1fto47m9vmj5l33rh.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAcxprmWJQeq3D5HKDYqvFoN0c7q-kupH4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "86570230949-oatbk726i7fl6cs1fto47m9vmj5l33rh.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

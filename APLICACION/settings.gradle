@@ -1,3 +1,0 @@
-include ':app'
-include ':things'
-rootProject.name = "things"

@@ -58,7 +58,6 @@ void loop() {
       case 'I': //Si recibe I se envia la ID
         Serial.println(ID);
         break;
-        delay(1000);
     }
   }
 
