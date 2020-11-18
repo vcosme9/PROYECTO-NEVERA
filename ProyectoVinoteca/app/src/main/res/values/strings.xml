@@ -1,3 +1,9 @@
 <resources>
     <string name="app_name">Proyecto Vinoteca</string>
+    <string name="label_contraseña">Contraseña</string>
+    <string name="label_nombre">Usuario</string>
+    <string name="label_cambiarcontraseñaporemail">Cambiar contraseña</string>
+    <string name="button_volver">Volver</string>
+
+
 </resources>
