@@ -22,6 +22,9 @@
 
         <activity android:name=".LoginActivity"
             android:screenOrientation="portrait"/>
+        <activity android:name=".editarPerfil"/>
+
+
 
         <activity android:name=".CustomLoginActivity">
             <intent-filter>

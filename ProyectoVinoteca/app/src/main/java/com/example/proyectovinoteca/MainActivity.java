@@ -203,4 +203,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 });
     }
 
+    public void lanzarEditarPerfil (View view){
+        Intent i = new Intent(this, editarPerfil.class);
+        startActivity(i);
+    }
+
 }
