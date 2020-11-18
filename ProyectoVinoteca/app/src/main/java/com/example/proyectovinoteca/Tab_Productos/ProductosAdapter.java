@@ -1,10 +1,12 @@
-package com.example.proyectovinoteca;
+package com.example.proyectovinoteca.Tab_Productos;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.example.proyectovinoteca.R;
 
 import java.util.ArrayList;
 
