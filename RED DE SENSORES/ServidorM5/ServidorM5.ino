@@ -1,3 +1,4 @@
+//#include <DHT.h>
 #include <M5Stack.h>
 #include <TimeLib.h>
 #include <SPI.h>
@@ -5,17 +6,24 @@
 #include <SD.h>
 
 #include "ClaseMagnetico.h"
-#include "ClaseRFID.h"
 
 #define BLANCO 0XFFFF
 #define NEGRO 0
-
+/*
+//Sensor Temperatura/Humedad
+#define DHTPIN G2
+#define DHTTYPE DHT11
+DHT dht(DHTPIN, DHTTYPE);
+*/
+//Sensor RFID
+String ID = "";
+int id;
 const int RST_PIN = 5;            // Pin 9 para el reset del RC522
 const int SS_PIN = 21;            // Pin 21 para el SS (SDA) del RC522
 MFRC522 mfrc522(SS_PIN, RST_PIN);   // Crear instancia del MFRC522
 
+//Clase magnetico
 ClaseMagnetico magn = ClaseMagnetico(2);
-ClaseRFID rfid = ClaseRFID(mfrc522);
 
 void setup() {
   Serial.begin(115200);
@@ -24,24 +32,49 @@ void setup() {
   pinMode(2, INPUT_PULLUP); //pin dos como pull-up
   SPI.begin();         //Función que inicializa SPI
   mfrc522.PCD_Init();     //Función  que inicializa RFID
+  //dht.begin();
 }
 
 void loop() {
-  //MEDIR LA HORA
-  String hora = "Hora: " + String(hour()) + ":" + String(minute()) + " Fecha; " + String(day()) + "/" + String(month()) + "/" + String(year());
-
   //MEDIR SENSOR MAGNETICO
   String magnetico = magn.sensorPuerta();
 
   //MEDIR SENSOR RFID
-  String ID = rfid.saberID();
-
+  if (mfrc522.PICC_IsNewCardPresent())
+  {
+    if (mfrc522.PICC_ReadCardSerial())
+    {
+      id = 0;
+      printArray(mfrc522.uid.uidByte, mfrc522.uid.size);
+      ID = String(id);
+      mfrc522.PICC_HaltA();
+    }
+  }
+/*
+  //MEDIR SENSOR TEMPERATURA/HUMEDAD
+  // Leemos la humedad relativa
+  float h = dht.readHumidity();
+  // Leemos la temperatura en grados centígrados (por defecto)
+  float t = dht.readTemperature();
+  // Leemos la temperatura en grados Fahreheit
+  float f = dht.readTemperature(true);
+  // Comprobamos si ha habido algún error en la lectura
+  if (isnan(h) || isnan(t) || isnan(f)) {
+    Serial.println("Error obteniendo los datos del sensor DHT11");
+    return;
+  }
+   // Calcular el índice de calor en Fahreheit
+  float hif = dht.computeHeatIndex(f, h);
+  // Calcular el índice de calor en grados centígrados
+  float hic = dht.computeHeatIndex(t, h, false);
+  String temp = String(t);
+  */
   //MOSTRAR POR PANTALLA EN M5STACK
   M5.Lcd.setCursor(0, 10); //posicion del texto
   M5.Lcd.setTextColor(BLANCO); //color del texto
-  M5.Lcd.println(hora); //muestra el resultado del sensor
   M5.Lcd.println("Magnetico: " + magnetico); //muestra el resultado del sensor
   M5.Lcd.println("ID: " + ID); //muestra el resultado del sensor
+  //M5.Lcd.println("Temperatura: " + temp); //muestra el resultado del sensor
   delay(1000);
   M5.Lcd.fillScreen(NEGRO); //borra la pantalla
 
@@ -52,13 +85,15 @@ void loop() {
       case 'M': //Si recibe M se envia el sensor magnetico
         Serial.println(magnetico);
         break;
-      case 'H': //Si recibe H se envia la hora
-        Serial.println(hora);
-        break;
       case 'I': //Si recibe I se envia la ID
         Serial.println(ID);
         break;
     }
   }
-
 }
+void printArray(byte *buffer, byte bufferSize) {
+  for (byte i = 0; i < bufferSize; i++) {
+    id = id + buffer[i];
+  }
+}
+
