@@ -18,7 +18,7 @@ import com.google.android.material.tabs.TabLayoutMediator;
 public class VinotecaFragment extends Fragment {
 
     // Nombres de las pestañas
-    private String[] nombres = new String[]{"Temperatura","Humedad","Historial"};
+    private String[] nombres = new String[]{"Temperatura","Mis Vinos","Historial"};
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle bundle){
