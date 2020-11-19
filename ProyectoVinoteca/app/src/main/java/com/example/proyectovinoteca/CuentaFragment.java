@@ -1,5 +1,6 @@
 package com.example.proyectovinoteca;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,12 +14,16 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
-import com.example.proyectovinoteca.R;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
-public class CuentaFragment extends Fragment {
+import static com.example.proyectovinoteca.MainActivity.CODIGO_EDITAR;
+
+public class CuentaFragment  extends Fragment {
+
     private perfilViewModel perfilViewModel;
+    private TextView textView_nombre;
+
     public Button editarPersona;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -33,7 +38,7 @@ public class CuentaFragment extends Fragment {
         //aqui se declaran las partes
 
 
-        final TextView textView_nombre = root.findViewById(R.id.nombre_TV);
+        textView_nombre = root.findViewById(R.id.nombre_TV);
         final TextView textView_correo = root.findViewById(R.id.correo_TV);
         final TextView textView_proveedor = root.findViewById(R.id.proveedorFB_TB);
         final TextView textView_rol = root.findViewById(R.id.rolFB_TB);
@@ -49,10 +54,16 @@ public class CuentaFragment extends Fragment {
                 textView_correo.setText(usuario.getEmail());
                 textView_proveedor.setText(usuario.getProviderId());
                 textView_rol.setText("Rol no definido.");
-
-
             }
         });
         return root;
     }
+    @Override public void onActivityResult(int requestCode, int resultCode,
+                                           Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode == CODIGO_EDITAR){
+            textView_nombre.setText(FirebaseAuth.getInstance().getCurrentUser().getDisplayName());
+        }
+    }
 }
+

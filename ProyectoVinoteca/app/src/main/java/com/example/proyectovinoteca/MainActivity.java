@@ -34,6 +34,8 @@ import com.google.firebase.auth.FirebaseUser;
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener,
         DrawerLayout.DrawerListener {
 
+
+    final static int CODIGO_EDITAR = 0;
     DrawerLayout drawerLayout;
     NavigationView navigationView;
     //ActionBarDrawerToggle actionBarDrawerToggle;
@@ -88,10 +90,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         TextView nombre = header.findViewById(R.id.nombre);
         TextView email = header.findViewById(R.id.email);
         nombre.setText(usuario.getDisplayName());
-        email.setText("");
-
-        //Email del usuario mostrado en el menú (comentado porque quizás se vea mejor sin él)
-        //email.setText("@" + usuario.getEmail());
+        email.setText(usuario.getEmail());
 
         //Carga de la primera pantalla (por defecto, la pantalla "Vinoteca")
         fragmentManager = getSupportFragmentManager();
@@ -206,6 +205,16 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public void lanzarEditarPerfil (View view){
         Intent i = new Intent(this, editarPerfil.class);
         startActivity(i);
+    }
+
+    @Override public void onActivityResult(int requestCode, int resultCode,
+                                           Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode == CODIGO_EDITAR){
+            View header = navigationView.getHeaderView(0);
+            TextView nombre = header.findViewById(R.id.nombre);
+            nombre.setText(FirebaseAuth.getInstance().getCurrentUser().getDisplayName());
+        }
     }
 
 }
