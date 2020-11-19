@@ -1,4 +1,4 @@
-package com.example.vicoscor.andoridthings;
+package com.example.vicoscor.androidthings;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -14,7 +14,23 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
-
+/**
+ * Skeleton of an Android Things activity.
+ * <p>
+ * Android Things peripheral APIs are accessible through the PeripheralManager
+ * For example, the snippet below will open a GPIO pin and set it to HIGH:
+ * <p>
+ * PeripheralManager manager = PeripheralManager.getInstance();
+ * try {
+ * Gpio gpio = manager.openGpio("BCM6");
+ * gpio.setDirection(Gpio.DIRECTION_OUT_INITIALLY_LOW);
+ * gpio.setValue(true);
+ * } catch (IOException e) {
+ * Log.e(TAG, "Unable to access GPIO");
+ * }
+ * <p>
+ * You can find additional examples on GitHub: https://github.com/androidthings
+ */
 public class MainActivity extends Activity {
 
     private static final String TAG = MainActivity.class.getSimpleName();
@@ -30,7 +46,7 @@ public class MainActivity extends Activity {
         String fecha = dateFormat.format(date);
 
         Log.i(TAG, "Lista de UART disponibles: " + ArduinoUart.disponibles());
-        ArduinoUart uart = new ArduinoUart("UART0", 115200);
+        ArduinoUart uart = new ArduinoUart("MINIUART", 115200);
 
         FirebaseFirestore db = FirebaseFirestore.getInstance();
 
@@ -56,18 +72,6 @@ public class MainActivity extends Activity {
         String id = uart.leer();
         Log.d(TAG, "Recibido de Arduino: "+id);
 
-        if(id.equals("715")){
-            producto = "Vino Rosado";
-        }
-        if(id.equals("719")){
-            producto = "Vino Rosado";
-        }
-        if(id.equals("723")){
-            producto = "Vino Tinto";
-        }
-        if(id.equals("727")){
-            producto = "Champagne";
-        }
         //---SUBIR DATOS DE LOS SENSORES A FIREBASE
         Map<String, Object> sensorMagnetico = new HashMap<>();
         sensorMagnetico.put("Magnetico", magnetico);
@@ -75,7 +79,7 @@ public class MainActivity extends Activity {
         db.collection("SENSORES").document("Sensor_Magnetico").collection("Magnetico").add(sensorMagnetico);
 
         Map<String, Object> sensorID = new HashMap<>();
-        sensorID.put("Vino", producto);
+        sensorID.put("Vino", id);
         sensorID.put("Fecha", fecha);
         db.collection("SENSORES").document("Sensor_RFID").collection("ID").add(sensorID);
 

@@ -10,10 +10,10 @@
 #define BLANCO 0XFFFF
 #define NEGRO 0
 /*
-//Sensor Temperatura/Humedad
-#define DHTPIN G2
-#define DHTTYPE DHT11
-DHT dht(DHTPIN, DHTTYPE);
+  //Sensor Temperatura/Humedad
+  #define DHTPIN G2
+  #define DHTTYPE DHT11
+  DHT dht(DHTPIN, DHTTYPE);
 */
 //Sensor RFID
 String ID = "";
@@ -46,28 +46,40 @@ void loop() {
     {
       id = 0;
       printArray(mfrc522.uid.uidByte, mfrc522.uid.size);
-      ID = String(id);
+      //ID = String(id);
+      if (id == 715) {
+        ID = "Vino Rosado";
+      }
+      if (id == 719) {
+        ID = "Vino Blanco";
+      }
+      if (id == 723) {
+        ID = "Vino Tinto";
+      }
+      if (id == 727) {
+        ID = "Vino Champagne";
+      }
       mfrc522.PICC_HaltA();
     }
   }
-/*
-  //MEDIR SENSOR TEMPERATURA/HUMEDAD
-  // Leemos la humedad relativa
-  float h = dht.readHumidity();
-  // Leemos la temperatura en grados centígrados (por defecto)
-  float t = dht.readTemperature();
-  // Leemos la temperatura en grados Fahreheit
-  float f = dht.readTemperature(true);
-  // Comprobamos si ha habido algún error en la lectura
-  if (isnan(h) || isnan(t) || isnan(f)) {
-    Serial.println("Error obteniendo los datos del sensor DHT11");
-    return;
-  }
-   // Calcular el índice de calor en Fahreheit
-  float hif = dht.computeHeatIndex(f, h);
-  // Calcular el índice de calor en grados centígrados
-  float hic = dht.computeHeatIndex(t, h, false);
-  String temp = String(t);
+  /*
+    //MEDIR SENSOR TEMPERATURA/HUMEDAD
+    // Leemos la humedad relativa
+    float h = dht.readHumidity();
+    // Leemos la temperatura en grados centígrados (por defecto)
+    float t = dht.readTemperature();
+    // Leemos la temperatura en grados Fahreheit
+    float f = dht.readTemperature(true);
+    // Comprobamos si ha habido algún error en la lectura
+    if (isnan(h) || isnan(t) || isnan(f)) {
+      Serial.println("Error obteniendo los datos del sensor DHT11");
+      return;
+    }
+     // Calcular el índice de calor en Fahreheit
+    float hif = dht.computeHeatIndex(f, h);
+    // Calcular el índice de calor en grados centígrados
+    float hic = dht.computeHeatIndex(t, h, false);
+    String temp = String(t);
   */
   //MOSTRAR POR PANTALLA EN M5STACK
   M5.Lcd.setCursor(0, 10); //posicion del texto

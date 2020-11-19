@@ -90,9 +90,9 @@
     },
     {
       "client_info": {
-        "mobilesdk_app_id": "1:796896562409:android:033f40bb4fc1f831ae3478",
+        "mobilesdk_app_id": "1:796896562409:android:ff9fccc048d97fc4ae3478",
         "android_client_info": {
-          "package_name": "com.example.vicoscor.andoridthings"
+          "package_name": "com.example.vicoscor.androidthings"
         }
       },
       "oauth_client": [

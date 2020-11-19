@@ -40,7 +40,6 @@ public class TabProductos extends Fragment {
     ArrayList<ClaseProducto> listaProductos;
 
     RecyclerView recyclerProductos;
-    String producto;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -49,8 +48,8 @@ public class TabProductos extends Fragment {
         listaProductos = new ArrayList<>();
         recyclerProductos.setLayoutManager(new LinearLayoutManager(getContext()));
 
-        //loadDataFromFirestore();
-        llenarlista();
+        loadDataFromFirestore();
+        //llenarlista();
 
 
         ProductosAdapter adapter = new ProductosAdapter(listaProductos);
@@ -65,24 +64,6 @@ public class TabProductos extends Fragment {
         listaProductos.add(new ClaseProducto("prueba2", "esto es una prueba2", R.drawable.productos));
     }
 
-   /* private  void consultarFirebase() {
-        //FirebaseFirestore db = FirebaseFirestore.getInstance();
-
-       // db.collection("SENSORES").document("productos").get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                if (task.isSuccessful()) {
-                    producto = task.getResult().getString("producto");
-
-                    Log.d("Firestore", "dato 1:" + producto);
-                } else {
-                    Log.e("Firestore", "Error al leer", task.getException());
-                }
-            }
-        });
-    }
-*/
-
     private void loadDataFromFirestore() {
 
         if (listaProductos.size() > 0) {
@@ -90,11 +71,11 @@ public class TabProductos extends Fragment {
         }
 
         //referencia la coleccion de firebase
-        final CollectionReference medidasInfo = db.collection("SENSORES").document("productos").collection("prod");
+        final CollectionReference medidasInfo = db.collection("SENSORES").document("Sensor_RFID").collection("ID");
 
 
         //coger la fecha mas nueva
-        medidasInfo.orderBy("fecha", Query.Direction.DESCENDING)
+        medidasInfo.orderBy("Fecha", Query.Direction.DESCENDING)
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
@@ -103,17 +84,15 @@ public class TabProductos extends Fragment {
 
                             Log.d(TAG, documentSnapshot.getId() + " => " + documentSnapshot.getData());
 
-                            //se guarda la nueva medida y la pasa a historialvo
-                            ClaseProducto mimedida = new ClaseProducto(documentSnapshot.getString("producto"), documentSnapshot.getString("fecha"), R.drawable.productos);
-                            listaProductos.add(mimedida);
+                            //se guarda la nueva medida
+                            ClaseProducto miVino = new ClaseProducto(documentSnapshot.getString("Vino"), documentSnapshot.getString("Fecha"), R.drawable.productos);
+                            listaProductos.add(miVino);
+
+                            //el array pasa al adaptador
+                            ProductosAdapter adaptador = new ProductosAdapter(listaProductos);
+                            recyclerProductos.setAdapter(adaptador);
 
                         }
-
-
-                        //el array pasa al adaptador
-                        ProductosAdapter adaptador = new ProductosAdapter(listaProductos);
-                        recyclerProductos.setAdapter(adaptador);
-
                     }
                 });
 
