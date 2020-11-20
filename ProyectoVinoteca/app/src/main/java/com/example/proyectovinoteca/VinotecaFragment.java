@@ -11,6 +11,7 @@ import androidx.fragment.app.FragmentActivity;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 import androidx.viewpager2.widget.ViewPager2;
 
+import com.example.proyectovinoteca.Tab_Alertas.TabAlertas;
 import com.example.proyectovinoteca.Tab_Productos.TabProductos;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
@@ -18,7 +19,7 @@ import com.google.android.material.tabs.TabLayoutMediator;
 public class VinotecaFragment extends Fragment {
 
     // Nombres de las pestañas
-    private String[] nombres = new String[]{"Temperatura","Mis Vinos","Historial"};
+    private String[] nombres = new String[]{"Temperatura","Mis Vinos","Historial","Alertas"};
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle bundle){
@@ -47,7 +48,7 @@ public class VinotecaFragment extends Fragment {
         }
         @Override
         public int getItemCount() {
-            return 3;
+            return 4;
         }
         @Override @NonNull
         public Fragment createFragment(int position) {
@@ -55,6 +56,7 @@ public class VinotecaFragment extends Fragment {
                 case 0: return new TabTemperatura();
                 case 1: return new TabProductos();
                 case 2: return new TabHistorial();
+                case 3: return new TabAlertas();
             }
             return null;
         }
