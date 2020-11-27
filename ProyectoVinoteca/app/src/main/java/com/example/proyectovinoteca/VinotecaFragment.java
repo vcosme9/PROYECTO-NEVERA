@@ -19,7 +19,7 @@ import com.google.android.material.tabs.TabLayoutMediator;
 public class VinotecaFragment extends Fragment {
 
     // Nombres de las pestañas
-    private String[] nombres = new String[]{"Temperatura","Mis Vinos","Historial","Alertas"};
+    private String[] nombres = new String[]{"Mediciones","Mis Vinos","Alertas"};
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle bundle){
@@ -48,15 +48,15 @@ public class VinotecaFragment extends Fragment {
         }
         @Override
         public int getItemCount() {
-            return 4;
+            return 3;
         }
         @Override @NonNull
         public Fragment createFragment(int position) {
             switch (position) {
                 case 0: return new TabTemperatura();
                 case 1: return new TabProductos();
-                case 2: return new TabHistorial();
-                case 3: return new TabAlertas();
+                //case 2: return new TabHistorial();
+                case 2: return new TabAlertas();
             }
             return null;
         }
