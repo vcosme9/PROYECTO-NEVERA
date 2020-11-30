@@ -7,12 +7,15 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.example.proyectovinoteca.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -28,6 +31,7 @@ public class TabProductos extends Fragment {
 
     private static final String TAG = "ProductosFragment";
     private ProductosViewModel productosViewModel;
+    private LinearLayout chargeContainer;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -47,6 +51,11 @@ public class TabProductos extends Fragment {
         recyclerProductos = (RecyclerView) vista.findViewById(R.id.recyclerId);
         listaProductos = new ArrayList<>();
         recyclerProductos.setLayoutManager(new LinearLayoutManager(getContext()));
+
+        //carga la imagen de carga
+        chargeContainer = vista.findViewById(R.id.chargeContainer);
+        ImageView loadIcon = vista.findViewById(R.id.chargingImage);
+        Glide.with(this).load(R.drawable.tenor).into(loadIcon);
 
         loadDataFromFirestore();
         //llenarlista();
@@ -92,6 +101,8 @@ public class TabProductos extends Fragment {
                             ProductosAdapter adaptador = new ProductosAdapter(listaProductos);
                             recyclerProductos.setAdapter(adaptador);
 
+                            //ocultar el contenedor de la imagen de carga
+                            chargeContainer.setVisibility(View.GONE);
                         }
                     }
                 });
