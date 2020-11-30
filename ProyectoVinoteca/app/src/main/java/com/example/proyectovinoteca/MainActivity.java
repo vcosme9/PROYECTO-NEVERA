@@ -34,7 +34,6 @@ import com.google.firebase.auth.FirebaseUser;
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener,
         DrawerLayout.DrawerListener {
 
-
     final static int CODIGO_EDITAR = 0;
     DrawerLayout drawerLayout;
     NavigationView navigationView;
@@ -204,7 +203,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     public void lanzarEditarPerfil (View view){
         Intent i = new Intent(this, editarPerfil.class);
-        startActivity(i);
+        startActivityForResult(i, CODIGO_EDITAR);
     }
 
     @Override public void onActivityResult(int requestCode, int resultCode,
@@ -214,6 +213,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             View header = navigationView.getHeaderView(0);
             TextView nombre = header.findViewById(R.id.nombre);
             nombre.setText(FirebaseAuth.getInstance().getCurrentUser().getDisplayName());
+            fragmentTransaction = fragmentManager.beginTransaction();
+            fragmentTransaction.replace(R.id.container, new CuentaFragment());
+            fragmentTransaction.commit();
         }
     }
 

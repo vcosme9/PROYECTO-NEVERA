@@ -16,7 +16,8 @@
         android:icon="@drawable/ic_custom_menu_star"
         android:title="Mis Favoritos"></item>
     <item
-        android:title="">
+        android:title=""
+        android:enabled="false">
     </item>
     <group
         android:id="@+id/grp1"

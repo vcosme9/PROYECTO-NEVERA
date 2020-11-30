@@ -17,8 +17,6 @@ import androidx.lifecycle.ViewModelProviders;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
-import static com.example.proyectovinoteca.MainActivity.CODIGO_EDITAR;
-
 public class CuentaFragment  extends Fragment {
 
     private perfilViewModel perfilViewModel;
@@ -57,13 +55,6 @@ public class CuentaFragment  extends Fragment {
             }
         });
         return root;
-    }
-    @Override public void onActivityResult(int requestCode, int resultCode,
-                                           Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if(requestCode == CODIGO_EDITAR){
-            textView_nombre.setText(FirebaseAuth.getInstance().getCurrentUser().getDisplayName());
-        }
     }
 }
 
