@@ -1,12 +1,19 @@
 package com.example.vicoscor.androidthings;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.app.Activity;
 import android.os.Bundle;
 import android.util.Log;
 
+import com.example.vicoscor.comun.Mqtt;
 import com.google.firebase.firestore.FirebaseFirestore;
+
+import org.eclipse.paho.client.mqttv3.IMqttDeliveryToken;
+import org.eclipse.paho.client.mqttv3.MqttCallback;
+import org.eclipse.paho.client.mqttv3.MqttClient;
+import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
+import org.eclipse.paho.client.mqttv3.MqttException;
+import org.eclipse.paho.client.mqttv3.MqttMessage;
+import org.eclipse.paho.client.mqttv3.persist.MemoryPersistence;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -14,27 +21,15 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
-/**
- * Skeleton of an Android Things activity.
- * <p>
- * Android Things peripheral APIs are accessible through the PeripheralManager
- * For example, the snippet below will open a GPIO pin and set it to HIGH:
- * <p>
- * PeripheralManager manager = PeripheralManager.getInstance();
- * try {
- * Gpio gpio = manager.openGpio("BCM6");
- * gpio.setDirection(Gpio.DIRECTION_OUT_INITIALLY_LOW);
- * gpio.setValue(true);
- * } catch (IOException e) {
- * Log.e(TAG, "Unable to access GPIO");
- * }
- * <p>
- * You can find additional examples on GitHub: https://github.com/androidthings
- */
-public class MainActivity extends Activity {
+import static com.example.vicoscor.comun.Mqtt.qos;
+import static com.example.vicoscor.comun.Mqtt.topicRoot;
+
+public class MainActivity extends Activity implements MqttCallback {
 
     private static final String TAG = MainActivity.class.getSimpleName();
-    public String producto="";
+    public static MqttClient client = null;
+    FirebaseFirestore db;
+    String fecha;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,12 +38,12 @@ public class MainActivity extends Activity {
 
         SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm dd-MM-yyyy", Locale.getDefault());
         Date date = new Date();
-        String fecha = dateFormat.format(date);
+        fecha = dateFormat.format(date);
 
         Log.i(TAG, "Lista de UART disponibles: " + ArduinoUart.disponibles());
         ArduinoUart uart = new ArduinoUart("MINIUART", 115200);
 
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        db = FirebaseFirestore.getInstance();
 
         //---RECIBIR SENSOR MAGNETICO POR UART
         Log.d(TAG, "Mandado a Arduino: M");
@@ -59,7 +54,7 @@ public class MainActivity extends Activity {
             Log.w(TAG, "Error en sleep()", e);
         }
         String magnetico = uart.leer();
-        Log.d(TAG, "Recibido de Arduino: "+magnetico);
+        Log.d(TAG, "Recibido de Arduino: " + magnetico);
 
         //---RECIBIR SENSOR RFID POR UART
         Log.d(TAG, "Mandado a Arduino: I");
@@ -70,7 +65,7 @@ public class MainActivity extends Activity {
             Log.w(TAG, "Error en sleep()", e);
         }
         String id = uart.leer();
-        Log.d(TAG, "Recibido de Arduino: "+id);
+        Log.d(TAG, "Recibido de Arduino: " + id);
 
         //---SUBIR DATOS DE LOS SENSORES A FIREBASE
         Map<String, Object> sensorMagnetico = new HashMap<>();
@@ -83,5 +78,61 @@ public class MainActivity extends Activity {
         sensorID.put("Fecha", fecha);
         db.collection("SENSORES").document("Sensor_RFID").collection("ID").add(sensorID);
 
+        //--RECIBIR DESDE MQTT
+        try {
+            Log.i(Mqtt.TAG, "Conectando al broker " + Mqtt.broker);
+            client = new MqttClient(Mqtt.broker, Mqtt.clientId,
+                    new MemoryPersistence());
+            MqttConnectOptions connOpts = new MqttConnectOptions();
+            connOpts.setCleanSession(true);
+            connOpts.setKeepAliveInterval(60);
+            connOpts.setWill(topicRoot + "WillTopic", "App desconectada".getBytes(), Mqtt.qos, false);
+            client.connect(connOpts);
+        } catch (MqttException e) {
+            Log.e(Mqtt.TAG, "Error al conectar.", e);
+        }
+        //--RECIBIR SENSOR TEMPERATURA DESDE MQTT
+        try {
+            Log.i(Mqtt.TAG, "Suscrito a " + topicRoot + "SensorTemperatura");
+            client.subscribe(topicRoot + "SensorMagnetico", qos);
+            client.setCallback(this);
+        } catch (MqttException e) {
+            Log.e(Mqtt.TAG, "Error al suscribir.", e);
+        }
+
+
+    }
+
+    @Override
+    public void onDestroy() {
+        try {
+            Log.i(Mqtt.TAG, "Desconectado");
+            client.disconnect();
+        } catch (MqttException e) {
+            Log.e(Mqtt.TAG, "Error al desconectar.", e);
+        }
+        super.onDestroy();
+    }
+
+    @Override
+    public void connectionLost(Throwable cause) {
+        Log.d(Mqtt.TAG, "Conexión perdida");
+    }
+
+    @Override
+    public void messageArrived(String topic, MqttMessage message) throws Exception {
+        String payload = new String(message.getPayload());
+        Log.d(Mqtt.TAG, "Recibiendo: " + topic + "->" + payload);
+
+        Map<String, Object> sensorTemperatura = new HashMap<>();
+        sensorTemperatura.put("Temperatura", payload);
+        sensorTemperatura.put("Fecha", fecha);
+        db.collection("SENSORES").document("Sensor_Temperatura").collection("Temperatura").add(sensorTemperatura);
+
+    }
+
+    @Override
+    public void deliveryComplete(IMqttDeliveryToken token) {
+        Log.d(Mqtt.TAG, "Entrega completa");
     }
 }
