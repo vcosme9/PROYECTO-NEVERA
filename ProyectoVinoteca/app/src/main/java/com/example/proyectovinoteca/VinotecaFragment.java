@@ -53,9 +53,8 @@ public class VinotecaFragment extends Fragment {
         @Override @NonNull
         public Fragment createFragment(int position) {
             switch (position) {
-                case 0: return new TabTemperatura();
+                case 0: return new TabSensores();
                 case 1: return new TabProductos();
-                //case 2: return new TabHistorial();
                 case 2: return new TabAlertas();
             }
             return null;
