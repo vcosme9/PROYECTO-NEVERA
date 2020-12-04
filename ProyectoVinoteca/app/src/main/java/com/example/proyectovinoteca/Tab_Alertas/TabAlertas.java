@@ -40,62 +40,44 @@ public class TabAlertas extends Fragment {
 
     ArrayList<ClaseAlerta> listaAlertas;
 
-    RecyclerView recyclerProductos;
-    String producto;
+    RecyclerView recyclerAlertas;
+    double temp = 0.0;
+    String fecha ="";
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         View vista = inflater.inflate(R.layout.tab_alertas, container, false);
-        recyclerProductos = (RecyclerView) vista.findViewById(R.id.recyclerId);
+        recyclerAlertas = (RecyclerView) vista.findViewById(R.id.recyclerId);
         listaAlertas = new ArrayList<>();
-        recyclerProductos.setLayoutManager(new LinearLayoutManager(getContext()));
+        recyclerAlertas.setLayoutManager(new LinearLayoutManager(getContext()));
 
-        //loadDataFromFirestore();
-        llenarlista();
+        loadDataFromFirestoreTemperatura();
+       // llenarlista();
 
 
         AlertasAdapter adapter = new AlertasAdapter(listaAlertas);
-        recyclerProductos.setAdapter(adapter);
+        recyclerAlertas.setAdapter(adapter);
 
         return vista;
     }
 
     private void llenarlista() {
-        listaAlertas.add(new ClaseAlerta("Temperatura", "El sensor de temperatura ha detectado una medición dañina: 8ºC", R.drawable.alerta));
         //listaProductos.add(new ClaseProducto(productoo, productoo, R.drawable.productos));
         listaAlertas.add(new ClaseAlerta("Humedad", "El sensor de humedad detectó liquidos en el fondo de la nevera, revísala.", R.drawable.alerta));
     }
 
-   /* private  void consultarFirebase() {
-        //FirebaseFirestore db = FirebaseFirestore.getInstance();
-
-       // db.collection("SENSORES").document("productos").get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                if (task.isSuccessful()) {
-                    producto = task.getResult().getString("producto");
-
-                    Log.d("Firestore", "dato 1:" + producto);
-                } else {
-                    Log.e("Firestore", "Error al leer", task.getException());
-                }
-            }
-        });
-    }
-*/
-
-    private void loadDataFromFirestore() {
+    private void loadDataFromFirestoreTemperatura() {
 
         if (listaAlertas.size() > 0) {
             listaAlertas.clear();
         }
 
         //referencia la coleccion de firebase
-        final CollectionReference medidasInfo = db.collection("SENSORES").document("productos").collection("prod");
+        final CollectionReference medidasInfo = db.collection("SENSORES").document("Sensor_Temperatura").collection("Temperatura");
 
 
         //coger la fecha mas nueva
-        medidasInfo.orderBy("fecha", Query.Direction.DESCENDING)
+        medidasInfo.orderBy("Fecha", Query.Direction.DESCENDING)
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
@@ -103,17 +85,20 @@ public class TabAlertas extends Fragment {
                         for (QueryDocumentSnapshot documentSnapshot : task.getResult()) {
 
                             Log.d(TAG, documentSnapshot.getId() + " => " + documentSnapshot.getData());
-
-                            //se guarda la nueva medida y la pasa a historialvo
-                            ClaseAlerta mimedida = new ClaseAlerta(documentSnapshot.getString("producto"), documentSnapshot.getString("fecha"), R.drawable.alerta);
-                            listaAlertas.add(mimedida);
-
+                            double tempAux = Double.parseDouble(documentSnapshot.getString("Temperatura"));
+                            if(temp < tempAux){
+                                temp = tempAux;
+                                fecha = documentSnapshot.getString("Fecha");
+                            }
                         }
 
+                        if(temp > 18.0){
+                            listaAlertas.add(new ClaseAlerta("Temperatura", fecha +" El sensor de temperatura ha detectado una medición dañina: " + temp +"ºC", R.drawable.alerta));
+                        }
 
                         //el array pasa al adaptador
                         AlertasAdapter adaptador = new AlertasAdapter(listaAlertas);
-                        recyclerProductos.setAdapter(adaptador);
+                        recyclerAlertas.setAdapter(adaptador);
 
                     }
                 });
