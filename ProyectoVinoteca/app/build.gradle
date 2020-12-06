@@ -44,4 +44,5 @@ dependencies {
     implementation 'de.hdodenhof:circleimageview:3.1.0'
     implementation 'com.android.support:multidex:1.0.3'
     implementation 'com.github.bumptech.glide:glide:4.9.0'
+    implementation 'com.appyvet:materialrangebar:1.4.8'
 }
