@@ -3,22 +3,25 @@
     <item
         android:id="@+id/op1"
         android:icon="@drawable/ic_custom_menu_user"
-        android:title="Mi cuenta"></item>
+        android:title="Mi cuenta"/>
     <item android:title="Mi Nevera"
         android:icon="@drawable/ic_custom_menu_contactless"
-        android:id="@+id/op2"></item>
+        android:id="@+id/op2"/>
     <item
         android:id="@+id/op3"
         android:icon="@drawable/ic_custom_menu_equalizer"
-        android:title="Clasificaciones"></item>
+        android:title="Clasificaciones"/>
     <item
         android:id="@+id/op4"
         android:icon="@drawable/ic_custom_menu_star"
-        android:title="Mis Favoritos"></item>
+        android:title="Mis Favoritos"/>
+    <item
+        android:id="@+id/op5"
+        android:icon="@drawable/ic_custom_menu_map"
+        android:title="Guía" />
     <item
         android:title=""
-        android:enabled="false">
-    </item>
+        android:enabled="false"/>
     <group
         android:id="@+id/grp1"
         android:checkableBehavior="single">
@@ -26,11 +29,11 @@
             <item
                 android:id="@+id/other1"
                 android:icon="@drawable/ic_custom_menu_info"
-                android:title="Ayuda"></item>
+                android:title="Ayuda"/>
             <item
                 android:id="@+id/exit"
                 android:icon="@android:drawable/ic_menu_revert"
-                android:title="Cerrar sesión"></item>
+                android:title="Cerrar sesión"/>
         </menu>
     </group>
 </menu>

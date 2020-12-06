@@ -24,6 +24,8 @@ import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.NetworkImageView;
 import com.android.volley.toolbox.Volley;
+import com.example.proyectovinoteca.Tab_Guia.GuiaFragment;
+import com.example.proyectovinoteca.Tab_Guia.MapaActivity;
 import com.firebase.ui.auth.AuthUI;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -169,6 +171,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 break;
             case R.id.op4:
                 fragmentTransaction.replace(R.id.container, new FavoritosFragment());
+                break;
+            case R.id.op5:
+                fragmentTransaction.replace(R.id.container, new GuiaFragment());
                 break;
             case R.id.other1:
                 fragmentTransaction.replace(R.id.container, new AyudaFragment());
