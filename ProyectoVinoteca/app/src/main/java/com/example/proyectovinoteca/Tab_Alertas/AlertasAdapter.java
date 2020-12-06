@@ -9,7 +9,6 @@ import android.widget.TextView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.proyectovinoteca.R;
-import com.example.proyectovinoteca.Tab_Productos.ClaseProducto;
 
 import java.util.ArrayList;
 

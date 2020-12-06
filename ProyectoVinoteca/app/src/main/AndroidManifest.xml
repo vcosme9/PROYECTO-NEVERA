@@ -25,7 +25,6 @@
         <activity android:name=".editarPerfil"/>
 
 
-
         <activity android:name=".CustomLoginActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
