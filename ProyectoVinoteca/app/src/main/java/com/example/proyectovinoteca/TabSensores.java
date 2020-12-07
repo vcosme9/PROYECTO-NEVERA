@@ -3,6 +3,7 @@ package com.example.proyectovinoteca;
 
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,10 +15,29 @@ import android.widget.TextView;
 import androidx.fragment.app.Fragment;
 
 import com.appyvet.materialrangebar.RangeBar;
+import com.google.firebase.firestore.FirebaseFirestore;
+
+import org.eclipse.paho.client.mqttv3.IMqttDeliveryToken;
+import org.eclipse.paho.client.mqttv3.MqttCallbackExtended;
+import org.eclipse.paho.client.mqttv3.MqttClient;
+import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
+import org.eclipse.paho.client.mqttv3.MqttException;
+import org.eclipse.paho.client.mqttv3.MqttMessage;
+import org.eclipse.paho.client.mqttv3.persist.MemoryPersistence;
+
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
+
+import static com.example.proyectovinoteca.Mqtt.topicRoot;
 
 public class TabSensores extends Fragment {
 
-    CheckBox checkBoxTem, checkBoxHum;
+    public static MqttClient client = null;
+    private FirebaseFirestore mDatabase;
+    private TextView texto;
+
+    CheckBox checkBoxTem, checkBoxHum, checkBoxLuz;
     RangeBar rangeBarTem, rangeBarHum;
     LinearLayout containerRangoTem, containerRangoHum;
     TextView minValueTem, maxValueTem, minValueHum, maxValueHum;
@@ -33,6 +53,7 @@ public class TabSensores extends Fragment {
 
         final TextView temperaturaActual = v.findViewById(R.id.txt_temperatura_actual);
         final TextView humedadActual = v.findViewById(R.id.txt_humedad_actual);
+        checkBoxLuz = v.findViewById(R.id.chk_luz);
         checkBoxTem = v.findViewById(R.id.chk_activar_rango_temperatura);
         checkBoxHum = v.findViewById(R.id.chk_activar_rango_humedad);
         rangeBarTem = v.findViewById(R.id.rng_alerta_temperatura);
@@ -56,6 +77,12 @@ public class TabSensores extends Fragment {
             }
         });
         checkBoxHum.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onCheckBoxClick(v);
+            }
+        });
+        checkBoxLuz.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 onCheckBoxClick(v);
@@ -152,6 +179,54 @@ public class TabSensores extends Fragment {
             }
         });
 
+        //para la luz por mqtt
+        mDatabase = FirebaseFirestore.getInstance();
+        try {
+            Log.i(Mqtt.TAG, "Conectando al broker " + Mqtt.broker);
+            client = new MqttClient(Mqtt.broker, Mqtt.clientId,
+                    new MemoryPersistence());
+            MqttConnectOptions connOpts = new MqttConnectOptions();
+            connOpts.setCleanSession(true);
+            connOpts.setKeepAliveInterval(60);
+            connOpts.setWill(topicRoot+"WillTopic", "App desconectada".getBytes(),Mqtt.qos, false);
+            client.connect(connOpts);
+        } catch (MqttException e) {
+            Log.e(Mqtt.TAG, "Error al conectar.", e);
+        }
+        try {
+            Log.i(Mqtt.TAG, "Suscrito a " + topicRoot+"cmnd/POWER");
+            client.subscribe(topicRoot+"cmnd/POWER", Mqtt.qos);
+            client.setCallback(new MqttCallbackExtended() {
+                @Override
+                public void connectComplete(boolean reconnect, String serverURI) {
+                }
+
+                @Override
+                public void connectionLost(Throwable cause) {
+                    Log.d(Mqtt.TAG, "Conexión perdida");
+                }
+                @Override
+                public void messageArrived(String topic, MqttMessage message) throws
+                        Exception {
+                    String payload = new String(message.getPayload());
+                    Map<String, Object> documento = new HashMap<>();
+
+                    if(topic.equals(topicRoot + "cmnd/POWER")) {
+                        documento.put("topic", "cmnd/POWER");
+                        documento.put("value", payload);
+                        documento.put("fecha (millis)", System.currentTimeMillis());
+                        documento.put("fecha", new Date());
+                        mDatabase.collection("recibido").document().set(documento);
+                    }
+                }
+                @Override
+                public void deliveryComplete(IMqttDeliveryToken token) {
+                }
+            });
+        } catch (MqttException e) {
+            Log.e(Mqtt.TAG, "Error al suscribir.", e);
+        }
+
         return v;
     }
 
@@ -172,6 +247,24 @@ public class TabSensores extends Fragment {
                     containerRangoHum.setVisibility(View.GONE);
                 }
                 break;
+            case R.id.chk_luz:
+                if(((CheckBox)v).isChecked()){
+                    enviarValor(v, "ON");
+                } else {
+                    enviarValor(v, "OFF");
+                }
+                break;
+        }
+    }
+
+    public void enviarValor(View view, String valor){
+        try {
+            MqttMessage message = new MqttMessage(valor.getBytes());
+            message.setQos(Mqtt.qos);
+            message.setRetained(false);
+            client.publish(topicRoot+"cmnd/POWER", message);
+        } catch (MqttException e) {
+            Log.e(Mqtt.TAG, "Error al publicar.", e);
         }
     }
 }

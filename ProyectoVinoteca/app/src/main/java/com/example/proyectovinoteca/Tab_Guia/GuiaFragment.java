@@ -19,10 +19,17 @@ public class GuiaFragment extends Fragment {
         View v = inflater.inflate(R.layout.opcion_guia, container, false);
 
         Button verMapa = v.findViewById(R.id.btn_ver_mapa);
+        Button comprar = v.findViewById(R.id.btn_comprar);
         verMapa.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 lanzarMapa(v);
+            }
+        });
+        comprar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                lanzarComprar(v);
             }
         });
 
@@ -31,6 +38,11 @@ public class GuiaFragment extends Fragment {
 
     public void lanzarMapa(View view){
         Intent i = new Intent(getContext(), MapaActivity.class);
+        startActivity(i);
+    }
+
+    public void lanzarComprar(View view){
+        Intent i = new Intent(getContext(), ComprarVinos.class);
         startActivity(i);
     }
 }

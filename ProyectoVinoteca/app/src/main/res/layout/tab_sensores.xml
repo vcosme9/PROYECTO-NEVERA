@@ -9,6 +9,14 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
+        <CheckBox
+            android:id="@+id/chk_luz"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:paddingLeft="16dp"
+            android:textSize="20dp"
+            android:text="Luz de la nevera"/>
         <TextView
             android:layout_width="match_parent"
             android:text="Temperatura actual"
