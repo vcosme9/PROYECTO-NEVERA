@@ -129,14 +129,16 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center">
+
                 <Button
                     android:id="@+id/btn_guardar_temperatura"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:foreground="?android:attr/selectableItemBackground"
                     android:background="@color/colorAccent"
+                    android:foreground="?android:attr/selectableItemBackground"
+                    android:text="Guardar"
                     android:textColor="#ffffff"
-                    android:text="Guardar" />
+                    android:onClick="guardar"/>
             </LinearLayout>
         </LinearLayout>
         <!-- ___________________________________________________________ -->

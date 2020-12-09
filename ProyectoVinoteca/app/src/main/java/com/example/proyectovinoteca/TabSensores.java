@@ -25,8 +25,10 @@ import org.eclipse.paho.client.mqttv3.MqttException;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
 import org.eclipse.paho.client.mqttv3.persist.MemoryPersistence;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 
 import static com.example.proyectovinoteca.Mqtt.topicRoot;
@@ -41,6 +43,9 @@ public class TabSensores extends Fragment {
     RangeBar rangeBarTem, rangeBarHum;
     LinearLayout containerRangoTem, containerRangoHum;
     TextView minValueTem, maxValueTem, minValueHum, maxValueHum;
+    Button botonGuardar;
+    String fecha;
+    FirebaseFirestore db;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -50,7 +55,6 @@ public class TabSensores extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.tab_sensores, container, false);
-
         final TextView temperaturaActual = v.findViewById(R.id.txt_temperatura_actual);
         final TextView humedadActual = v.findViewById(R.id.txt_humedad_actual);
         checkBoxLuz = v.findViewById(R.id.chk_luz);
@@ -64,10 +68,19 @@ public class TabSensores extends Fragment {
         maxValueTem = v.findViewById(R.id.txt_temperatura_maxima);
         minValueHum = v.findViewById(R.id.txt_humedad_minima);
         maxValueHum = v.findViewById(R.id.txt_humedad_maxima);
+        botonGuardar = v.findViewById(R.id.btn_guardar_temperatura);
 
         //ponemos los valores iniciales en los TextViews
         temperaturaActual.setText("18º");
         humedadActual.setText("65%");
+
+        //la fecha de hoy
+        SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm dd-MM-yyyy", Locale.getDefault());
+        Date date = new Date();
+        fecha = dateFormat.format(date);
+
+        //Base de datos
+        db = FirebaseFirestore.getInstance();
 
         //le damos funcionalidad al checkbox
         checkBoxTem.setOnClickListener(new View.OnClickListener() {
@@ -86,6 +99,17 @@ public class TabSensores extends Fragment {
             @Override
             public void onClick(View v) {
                 onCheckBoxClick(v);
+            }
+        });
+
+        //funcionalidad al boton guardar
+        botonGuardar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Map<String, Object> rangoMaxTemp = new HashMap<>();
+                rangoMaxTemp.put("Temperatura", rangeBarTem.getRightPinValue());
+                rangoMaxTemp.put("Fecha", fecha);
+                    db.collection("ALERTAS").document("Rango_TempMax").collection("RangoMaximo").add(rangoMaxTemp);
             }
         });
 
@@ -267,4 +291,5 @@ public class TabSensores extends Fragment {
             Log.e(Mqtt.TAG, "Error al publicar.", e);
         }
     }
+
 }

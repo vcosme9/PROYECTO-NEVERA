@@ -6,15 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import androidx.annotation.NonNull;
-import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import com.example.proyectovinoteca.R;
-import com.example.proyectovinoteca.Tab_Productos.ClaseProducto;
-import com.example.proyectovinoteca.Tab_Productos.ProductosAdapter;
-import com.example.proyectovinoteca.Tab_Productos.ProductosViewModel;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
@@ -24,6 +16,11 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
+
+import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 public class TabAlertas extends Fragment {
 
@@ -42,7 +39,8 @@ public class TabAlertas extends Fragment {
 
     RecyclerView recyclerAlertas;
     double temp = 0.0;
-    String fecha ="";
+    String fecha = "";
+    double tempMax = 0.0;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -51,8 +49,9 @@ public class TabAlertas extends Fragment {
         listaAlertas = new ArrayList<>();
         recyclerAlertas.setLayoutManager(new LinearLayoutManager(getContext()));
 
+        //rangoMaximoTemperatura();
         loadDataFromFirestoreTemperatura();
-       // llenarlista();
+        // llenarlista();
 
 
         AlertasAdapter adapter = new AlertasAdapter(listaAlertas);
@@ -71,13 +70,11 @@ public class TabAlertas extends Fragment {
         if (listaAlertas.size() > 0) {
             listaAlertas.clear();
         }
-
         //referencia la coleccion de firebase
-        final CollectionReference medidasInfo = db.collection("SENSORES").document("Sensor_Temperatura").collection("Temperatura");
-
-
+        final CollectionReference medidasInfoTempMax = db.collection("ALERTAS").document("Rango_TempMax").collection("RangoMaximo");
         //coger la fecha mas nueva
-        medidasInfo.orderBy("Fecha", Query.Direction.DESCENDING)
+        medidasInfoTempMax.orderBy("Fecha", Query.Direction.DESCENDING)
+                .limit(1)
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
@@ -85,23 +82,37 @@ public class TabAlertas extends Fragment {
                         for (QueryDocumentSnapshot documentSnapshot : task.getResult()) {
 
                             Log.d(TAG, documentSnapshot.getId() + " => " + documentSnapshot.getData());
-                            double tempAux = Double.parseDouble(documentSnapshot.getString("Temperatura"));
-                            if(temp < tempAux){
-                                temp = tempAux;
-                                fecha = documentSnapshot.getString("Fecha");
-                            }
+                            tempMax = Double.parseDouble(documentSnapshot.getString("Temperatura"));
+                            Log.i(TAG, "--------------------" + tempMax);
+                            //referencia la coleccion de firebase
+                            final CollectionReference medidasInfo = db.collection("SENSORES").document("Sensor_Temperatura").collection("Temperatura");
+
+
+                            //coger la fecha mas nueva
+                            medidasInfo.orderBy("Fecha", Query.Direction.DESCENDING)
+                                    .get()
+                                    .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                        @Override
+                                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                            for (QueryDocumentSnapshot documentSnapshot : task.getResult()) {
+
+                                                Log.d(TAG, documentSnapshot.getId() + " => " + documentSnapshot.getData());
+                                                temp = Double.parseDouble(documentSnapshot.getString("Temperatura"));
+                                                if (temp > tempMax) {
+                                                    listaAlertas.add(new ClaseAlerta("Temperatura", fecha + " El sensor de temperatura ha detectado una medición dañina: " + temp + "ºC", R.drawable.alerta));
+                                                }
+
+                                            }
+
+
+                                            //el array pasa al adaptador
+                                            AlertasAdapter adaptador = new AlertasAdapter(listaAlertas);
+                                            recyclerAlertas.setAdapter(adaptador);
+
+                                        }
+                                    });
                         }
-
-                        if(temp > 18.0){
-                            listaAlertas.add(new ClaseAlerta("Temperatura", fecha +" El sensor de temperatura ha detectado una medición dañina: " + temp +"ºC", R.drawable.alerta));
-                        }
-
-                        //el array pasa al adaptador
-                        AlertasAdapter adaptador = new AlertasAdapter(listaAlertas);
-                        recyclerAlertas.setAdapter(adaptador);
-
                     }
                 });
-
     }
 }
