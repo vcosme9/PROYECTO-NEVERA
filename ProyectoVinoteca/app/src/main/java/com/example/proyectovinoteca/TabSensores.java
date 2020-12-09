@@ -180,7 +180,7 @@ public class TabSensores extends Fragment {
         });
 
         //para la luz por mqtt
-        mDatabase = FirebaseFirestore.getInstance();
+        /*mDatabase = FirebaseFirestore.getInstance();
         try {
             Log.i(Mqtt.TAG, "Conectando al broker " + Mqtt.broker);
             client = new MqttClient(Mqtt.broker, Mqtt.clientId,
@@ -225,7 +225,7 @@ public class TabSensores extends Fragment {
             });
         } catch (MqttException e) {
             Log.e(Mqtt.TAG, "Error al suscribir.", e);
-        }
+        }*/
 
         return v;
     }
@@ -248,11 +248,11 @@ public class TabSensores extends Fragment {
                 }
                 break;
             case R.id.chk_luz:
-                if(((CheckBox)v).isChecked()){
+                /*if(((CheckBox)v).isChecked()){
                     enviarValor(v, "ON");
                 } else {
                     enviarValor(v, "OFF");
-                }
+                }*/
                 break;
         }
     }
