@@ -8,6 +8,8 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.CompoundButton;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.SearchView;
 import android.widget.Spinner;
@@ -17,6 +19,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
@@ -40,6 +43,9 @@ public class ClasificacionesFragment extends Fragment {
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
     private AdaptadorRanking adaptador;
     private Spinner spinner;
+    private RadioButton rdVal;
+    private LinearLayout chargeContainer;
+    private LinearLayout containerAll;
 
     public ClasificacionesFragment() {
     }
@@ -51,7 +57,16 @@ public class ClasificacionesFragment extends Fragment {
         View vista=inflater.inflate(R.layout.opcion_clasificaciones, container, false);
         addItemsOnSpinner(vista);
 
-        final RadioButton rdVal = vista.findViewById(R.id.radioValoracion);
+        chargeContainer = vista.findViewById(R.id.chargeContainer);
+        containerAll = vista.findViewById(R.id.containerAll);
+        containerAll.setVisibility(View.GONE);
+
+        //carga la imagen de carga
+        chargeContainer = vista.findViewById(R.id.chargeContainer);
+        ImageView loadIcon = vista.findViewById(R.id.chargingImage);
+        Glide.with(this).load(R.drawable.tenor).into(loadIcon);
+
+        rdVal = vista.findViewById(R.id.radioValoracion);
         final SearchView searchView = vista.findViewById(R.id.searchView);
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
@@ -70,31 +85,6 @@ public class ClasificacionesFragment extends Fragment {
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
-        rdVal.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if(rdVal.isChecked()){
-                    orderValoracion(listaVinos);
-                }
-                else {
-                    orderName(listaVinos);
-                }
-                adaptador.notifyDataSetChanged();
-            }
-        });
-        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                String tipo=getResources().getStringArray(R.array.tipos)[i];
-                spinTipo(tipo);
-                adaptador.notifyDataSetChanged();
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> adapterView) {
-
-            }
-        });
         return vista;
     }
     public void orderName(ArrayList<Vino> listaVinos){
@@ -156,6 +146,37 @@ public class ClasificacionesFragment extends Fragment {
                             listaVinos.add(miVino);
                             adaptador = new AdaptadorRanking(listaVinos);
                             recyclerView.setAdapter(adaptador);
+
+                            rdVal.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                                @Override
+                                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                                    if(rdVal.isChecked()){
+                                        orderValoracion(listaVinos);
+                                    }
+                                    else {
+                                        orderName(listaVinos);
+                                    }
+                                    adaptador.notifyDataSetChanged();
+                                }
+                            });
+
+                            spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                                @Override
+                                public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                                    String tipo=getResources().getStringArray(R.array.tipos)[i];
+                                    spinTipo(tipo);
+                                    adaptador.notifyDataSetChanged();
+                                }
+
+                                @Override
+                                public void onNothingSelected(AdapterView<?> adapterView) {
+
+                                }
+                            });
+
+                            //ocultar el contenedor de la imagen de carga y mostrar el contenido
+                            containerAll.setVisibility(View.VISIBLE);
+                            chargeContainer.setVisibility(View.GONE);
                         }
                     }
                 });

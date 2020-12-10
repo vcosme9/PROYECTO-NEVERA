@@ -15,6 +15,9 @@ import android.widget.TextView;
 import androidx.fragment.app.Fragment;
 
 import com.appyvet.materialrangebar.RangeBar;
+import com.google.android.material.navigation.NavigationView;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import org.eclipse.paho.client.mqttv3.IMqttDeliveryToken;
@@ -37,7 +40,6 @@ public class TabSensores extends Fragment {
 
     public static MqttClient client = null;
     private FirebaseFirestore mDatabase;
-    private TextView texto;
 
     CheckBox checkBoxTem, checkBoxHum, checkBoxLuz;
     RangeBar rangeBarTem, rangeBarHum;
@@ -204,10 +206,12 @@ public class TabSensores extends Fragment {
         });
 
         //para la luz por mqtt
+        FirebaseUser usuario = FirebaseAuth.getInstance().getCurrentUser();
+        String clientId = "user:"+usuario.getEmail();
         mDatabase = FirebaseFirestore.getInstance();
         try {
             Log.i(Mqtt.TAG, "Conectando al broker " + Mqtt.broker);
-            client = new MqttClient(Mqtt.broker, Mqtt.clientId,
+            client = new MqttClient(Mqtt.broker, clientId,
                     new MemoryPersistence());
             MqttConnectOptions connOpts = new MqttConnectOptions();
             connOpts.setCleanSession(true);
