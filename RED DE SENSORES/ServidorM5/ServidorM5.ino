@@ -40,7 +40,7 @@ char pass[] = "81903894";
 //--MQTT
 WiFiClient wifiClient;
 MqttClient mqttClient(wifiClient);
-const char broker[] = "mqtt.eclipse.org";
+const char broker[] = "test.mosquitto.org";
 int        port     = 1883;
 const char topic[] = "equipo3/VINOTECH/#";
 const long interval = 1000;
@@ -105,7 +105,7 @@ void loop() {
         ID = "Vino Tinto";
       }
       if (id == 727) {
-        ID = "Vino Champagne";
+        ID = "Cava";
       }
       mfrc522.PICC_HaltA();
     }
@@ -117,17 +117,17 @@ void loop() {
   //--MEDIR SENSOR TEMPERATURA/HUMEDAD
   boolean difTemp = false;
   boolean difHum = false;
-  
+
   //Humedad relativa
   humedadAux = humedad;
   float hum = dht.readHumidity();
   humedad = String(hum);
-  
+
   //Temperatura en centígrados
   temperaturaAux = temperatura;
   float temp = dht.readTemperature();
   temperatura = String(temp);
-  
+
   // Comprobamos si ha habido algún error en la lectura
   if (isnan(hum) || isnan(temp)) {
     Serial.println("Error obteniendo los datos del sensor DHT11");
@@ -201,6 +201,9 @@ void loop() {
         break;
       case 'I': //Si recibe I se envia la ID
         Serial.println(ID);
+        break;
+      case 'H': //Si recibe H se envia la humedad
+        Serial.println(humedad);
         break;
     }
   }

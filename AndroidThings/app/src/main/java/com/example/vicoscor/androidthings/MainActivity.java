@@ -30,12 +30,13 @@ public class MainActivity extends Activity implements MqttCallback {
     public static MqttClient client = null;
     FirebaseFirestore db;
     String fecha;
+    int health = 10;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
+        
         SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm dd-MM-yyyy", Locale.getDefault());
         Date date = new Date();
         fecha = dateFormat.format(date);
@@ -44,41 +45,58 @@ public class MainActivity extends Activity implements MqttCallback {
         ArduinoUart uart = new ArduinoUart("MINIUART", 115200);
 
         db = FirebaseFirestore.getInstance();
+/*
+            //---RECIBIR SENSOR MAGNETICO POR UART
+            Log.d(TAG, "Mandado a Arduino: M");
+            uart.escribir("M");
+            try {
+                Thread.sleep(10000);
+            } catch (InterruptedException e) {
+                Log.w(TAG, "Error en sleep()", e);
+            }
+            String magnetico = uart.leer();
+            Log.d(TAG, "Recibido de Arduino: " + magnetico);
 
-        //---RECIBIR SENSOR MAGNETICO POR UART
-        Log.d(TAG, "Mandado a Arduino: M");
-        uart.escribir("M");
-        try {
-            Thread.sleep(10000);
-        } catch (InterruptedException e) {
-            Log.w(TAG, "Error en sleep()", e);
-        }
-        String magnetico = uart.leer();
-        Log.d(TAG, "Recibido de Arduino: " + magnetico);
+            //---RECIBIR SENSOR RFID POR UART
+            Log.d(TAG, "Mandado a Arduino: I");
+            uart.escribir("I");
+            try {
+                Thread.sleep(10000);
+            } catch (InterruptedException e) {
+                Log.w(TAG, "Error en sleep()", e);
+            }
+            String id = uart.leer();
+            Log.d(TAG, "Recibido de Arduino: " + id);
 
-        //---RECIBIR SENSOR RFID POR UART
-        Log.d(TAG, "Mandado a Arduino: I");
-        uart.escribir("I");
-        try {
-            Thread.sleep(10000);
-        } catch (InterruptedException e) {
-            Log.w(TAG, "Error en sleep()", e);
-        }
-        String id = uart.leer();
-        Log.d(TAG, "Recibido de Arduino: " + id);
+            //---RECIBIR SENSOR HUMEDAD POR UART
+            Log.d(TAG, "Mandado a Arduino: H");
+            uart.escribir("H");
+            try {
+                Thread.sleep(10000);
+            } catch (InterruptedException e) {
+                Log.w(TAG, "Error en sleep()", e);
+            }
+            String humedad = uart.leer();
+            Log.d(TAG, "Recibido de Arduino: " + id);
 
-        //---SUBIR DATOS DE LOS SENSORES A FIREBASE
-        Map<String, Object> sensorMagnetico = new HashMap<>();
-        sensorMagnetico.put("Magnetico", magnetico);
-        sensorMagnetico.put("Fecha", fecha);
-        db.collection("SENSORES").document("Sensor_Magnetico").collection("Magnetico").add(sensorMagnetico);
+            //---SUBIR DATOS DE LOS SENSORES A FIREBASE
+            Map<String, Object> sensorMagnetico = new HashMap<>();
+            sensorMagnetico.put("Magnetico", magnetico);
+            sensorMagnetico.put("Fecha", fecha);
+            db.collection("SENSORES").document("Sensor_Magnetico").collection("Magnetico").add(sensorMagnetico);
 
-        Map<String, Object> sensorID = new HashMap<>();
-        sensorID.put("Vino", id);
-        sensorID.put("Fecha", fecha);
-        db.collection("SENSORES").document("Sensor_RFID").collection("ID").add(sensorID);
+            Map<String, Object> sensorID = new HashMap<>();
+            sensorID.put("Vino", id);
+            sensorID.put("Fecha", fecha);
+            db.collection("SENSORES").document("Sensor_RFID").collection("ID").add(sensorID);
 
-        //--RECIBIR DESDE MQTT
+            Map<String, Object> sensorHumedad = new HashMap<>();
+            sensorMagnetico.put("Magnetico", humedad);
+            sensorMagnetico.put("Fecha", fecha);
+            db.collection("SENSORES").document("Sensor_Humedad").collection("Humedad").add(sensorMagnetico);*/
+
+
+        //--CONFIGURAR MQTT
         try {
             Log.i(Mqtt.TAG, "Conectando al broker " + Mqtt.broker);
             client = new MqttClient(Mqtt.broker, Mqtt.clientId,
@@ -94,13 +112,35 @@ public class MainActivity extends Activity implements MqttCallback {
         //--RECIBIR SENSOR TEMPERATURA DESDE MQTT
         try {
             Log.i(Mqtt.TAG, "Suscrito a " + topicRoot + "SensorTemperatura");
+            client.subscribe(topicRoot + "SensorTemperatura", qos);
+            client.setCallback(this);
+        } catch (MqttException e) {
+            Log.e(Mqtt.TAG, "Error al suscribir.", e);
+        }
+
+        try {
+            Log.i(Mqtt.TAG, "Suscrito a " + topicRoot + "SensorHumedad");
+            client.subscribe(topicRoot + "SensorHumedad", qos);
+            client.setCallback(this);
+        } catch (MqttException e) {
+            Log.e(Mqtt.TAG, "Error al suscribir.", e);
+        }
+
+        try {
+            Log.i(Mqtt.TAG, "Suscrito a " + topicRoot + "SensorMagnetico");
             client.subscribe(topicRoot + "SensorMagnetico", qos);
             client.setCallback(this);
         } catch (MqttException e) {
             Log.e(Mqtt.TAG, "Error al suscribir.", e);
         }
 
-
+        try {
+            Log.i(Mqtt.TAG, "Suscrito a " + topicRoot + "SensorID");
+            client.subscribe(topicRoot + "SensorID", qos);
+            client.setCallback(this);
+        } catch (MqttException e) {
+            Log.e(Mqtt.TAG, "Error al suscribir.", e);
+        }
     }
 
     @Override
@@ -122,13 +162,39 @@ public class MainActivity extends Activity implements MqttCallback {
     @Override
     public void messageArrived(String topic, MqttMessage message) throws Exception {
         String payload = new String(message.getPayload());
-        Log.d(Mqtt.TAG, "Recibiendo: " + topic + "->" + payload);
+        Log.d(Mqtt.TAG, "-----------pues si que entra si");
 
-        Map<String, Object> sensorTemperatura = new HashMap<>();
-        sensorTemperatura.put("Temperatura", payload);
-        sensorTemperatura.put("Fecha", fecha);
-        db.collection("SENSORES").document("Sensor_Temperatura").collection("Temperatura").add(sensorTemperatura);
+        if (topic.equals(topicRoot + "SensorTemperatura")) {
+            Log.d(Mqtt.TAG, "Recibiendo: " + topic + "->" + payload);
+            Map<String, Object> sensorTemperatura = new HashMap<>();
+            sensorTemperatura.put("Temperatura", payload);
+            sensorTemperatura.put("Fecha", fecha);
+            db.collection("SENSORES").document("Sensor_Temperatura").collection("Temperatura").add(sensorTemperatura);
+        }
 
+        if (topic.equals(topicRoot + "SensorHumedad")) {
+            Log.d(Mqtt.TAG, "Recibiendo: " + topic + "->" + payload);
+            Map<String, Object> sensorHumedad = new HashMap<>();
+            sensorHumedad.put("Humedad", payload);
+            sensorHumedad.put("Fecha", fecha);
+            db.collection("SENSORES").document("Sensor_Humedad").collection("Humedad").add(sensorHumedad);
+        }
+
+        if (topic.equals(topicRoot + "SensorMagnetico")) {
+            Log.d(Mqtt.TAG, "Recibiendo: " + topic + "->" + payload);
+            Map<String, Object> sensorMagnetico = new HashMap<>();
+            sensorMagnetico.put("Magnetico", payload);
+            sensorMagnetico.put("Fecha", fecha);
+            db.collection("SENSORES").document("Sensor_Magnetico").collection("Magnetico").add(sensorMagnetico);
+        }
+
+        if (topic.equals(topicRoot + "SensorID")) {
+            Log.d(Mqtt.TAG, "Recibiendo: " + topic + "->" + payload);
+            Map<String, Object> sensorID = new HashMap<>();
+            sensorID.put("Vino", payload);
+            sensorID.put("Fecha", fecha);
+            db.collection("SENSORES").document("Sensor_RFID").collection("ID").add(sensorID);
+        }
     }
 
     @Override

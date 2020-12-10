@@ -43,7 +43,7 @@ public class TabSensores extends Fragment {
     RangeBar rangeBarTem, rangeBarHum;
     LinearLayout containerRangoTem, containerRangoHum;
     TextView minValueTem, maxValueTem, minValueHum, maxValueHum;
-    Button botonGuardar;
+    Button botonGuardarTemp;
     String fecha;
     FirebaseFirestore db;
 
@@ -68,7 +68,7 @@ public class TabSensores extends Fragment {
         maxValueTem = v.findViewById(R.id.txt_temperatura_maxima);
         minValueHum = v.findViewById(R.id.txt_humedad_minima);
         maxValueHum = v.findViewById(R.id.txt_humedad_maxima);
-        botonGuardar = v.findViewById(R.id.btn_guardar_temperatura);
+        botonGuardarTemp = v.findViewById(R.id.btn_guardar_temperatura);
 
         //ponemos los valores iniciales en los TextViews
         temperaturaActual.setText("18º");
@@ -103,7 +103,7 @@ public class TabSensores extends Fragment {
         });
 
         //funcionalidad al boton guardar
-        botonGuardar.setOnClickListener(new View.OnClickListener() {
+        botonGuardarTemp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Map<String, Object> rangoMaxTemp = new HashMap<>();
@@ -204,7 +204,7 @@ public class TabSensores extends Fragment {
         });
 
         //para la luz por mqtt
-        /*mDatabase = FirebaseFirestore.getInstance();
+        mDatabase = FirebaseFirestore.getInstance();
         try {
             Log.i(Mqtt.TAG, "Conectando al broker " + Mqtt.broker);
             client = new MqttClient(Mqtt.broker, Mqtt.clientId,
@@ -249,7 +249,7 @@ public class TabSensores extends Fragment {
             });
         } catch (MqttException e) {
             Log.e(Mqtt.TAG, "Error al suscribir.", e);
-        }*/
+        }
 
         return v;
     }
@@ -272,11 +272,11 @@ public class TabSensores extends Fragment {
                 }
                 break;
             case R.id.chk_luz:
-                /*if(((CheckBox)v).isChecked()){
+                if(((CheckBox)v).isChecked()){
                     enviarValor(v, "ON");
                 } else {
                     enviarValor(v, "OFF");
-                }*/
+                }
                 break;
         }
     }
