@@ -1,10 +1,21 @@
 package com.example.proyectovinoteca.Tab_Alertas;
 
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+
+import androidx.annotation.NonNull;
+import androidx.core.app.NotificationCompat;
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 
 import com.example.proyectovinoteca.R;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -21,11 +32,18 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import static android.content.Context.NOTIFICATION_SERVICE;
+
 
 public class TabAlertas extends Fragment {
 
     private static final String TAG = "ProductosFragment";
     private AlertasViewModel alertasViewModel;
+
+    private NotificationManager notificationManager;
+    static final String CANAL_ID = "mi_canal";
+    static final int NOTIFICACION_ID = 1;
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -65,13 +83,20 @@ public class TabAlertas extends Fragment {
         listaAlertas.add(new ClaseAlerta("Humedad", "El sensor de humedad detectó liquidos en el fondo de la nevera, revísala.", R.drawable.alerta));
     }
 
+
+
     private void loadDataFromFirestoreTemperatura() {
 
         if (listaAlertas.size() > 0) {
             listaAlertas.clear();
         }
         //referencia la coleccion de firebase
+
         final CollectionReference medidasInfoTempMax = db.collection("ALERTAS").document("Rango_TempMax").collection("RangoMaximo");
+
+        final CollectionReference medidasInfo = db.collection("SENSORES").document("Sensor_Temperatura").collection("Temperatura");
+
+
         //coger la fecha mas nueva
         medidasInfoTempMax.orderBy("Fecha", Query.Direction.DESCENDING)
                 .limit(1)
@@ -86,6 +111,28 @@ public class TabAlertas extends Fragment {
                             Log.i(TAG, "--------------------" + tempMax);
                             //referencia la coleccion de firebase
                             final CollectionReference medidasInfo = db.collection("SENSORES").document("Sensor_Temperatura").collection("Temperatura");
+
+
+                        if(temp > 18.0){
+                            listaAlertas.add(new ClaseAlerta("Temperatura", fecha +" El sensor de temperatura ha detectado una medición dañina: " + temp +"ºC", R.drawable.alerta));
+
+                            notificationManager = (NotificationManager)
+                                    getActivity().getSystemService(NOTIFICATION_SERVICE);
+                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                                NotificationChannel notificationChannel = new NotificationChannel(
+                                        CANAL_ID, "Mis Notificaciones",
+                                        NotificationManager.IMPORTANCE_DEFAULT);
+                                notificationChannel.setDescription("Descripcion del canal");
+                                notificationManager.createNotificationChannel(notificationChannel);
+                            }
+                            NotificationCompat.Builder notificacion
+                                    = new NotificationCompat.Builder(getContext(), CANAL_ID);
+                            notificacion.setSmallIcon(R.mipmap.ic_launcher);
+                            notificacion.setContentTitle("Título");
+                            notificacion.setContentText("Texto de la notificación.");
+                            notificationManager.notify(NOTIFICACION_ID, notificacion.build());
+
+                        }
 
 
                             //coger la fecha mas nueva
@@ -115,4 +162,7 @@ public class TabAlertas extends Fragment {
                     }
                 });
     }
+
+    //notificacion
+
 }
