@@ -1,5 +1,6 @@
 package com.example.proyectovinoteca;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -20,6 +21,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.example.proyectovinoteca.comentarios.ComentariosActivity;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
@@ -78,6 +80,15 @@ public class ClasificacionesFragment extends Fragment {
             @Override
             public boolean onQueryTextSubmit(String query) {
                 return true;
+            }
+        });
+
+        adaptador.setOnItemClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                int pos = recyclerView.getChildAdapterPosition(v);
+                Intent i=new Intent(getContext(), ComentariosActivity.class);
+                startActivity(i);
             }
         });
 

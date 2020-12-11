@@ -64,4 +64,5 @@ public class AdaptadorRanking extends
     public void setOnItemClickListener(View.OnClickListener onClickListener) {
         this.onClickListener = onClickListener;
     }
+
 }
