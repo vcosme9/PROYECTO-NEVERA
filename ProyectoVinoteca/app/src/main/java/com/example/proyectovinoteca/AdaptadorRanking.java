@@ -27,6 +27,7 @@ public class AdaptadorRanking extends
         public ImageView foto;
         public RatingBar valoracion;
         public CardView cardView;
+        protected View.OnClickListener onClickListener;
         public ViewHolder(View itemView) {
             super(itemView);
             cardView = itemView.findViewById(R.id.card);
@@ -60,5 +61,7 @@ public class AdaptadorRanking extends
     @Override public int getItemCount() {
         return vinos.size();
     }
-
+    public void setOnItemClickListener(View.OnClickListener onClickListener) {
+        this.onClickListener = onClickListener;
+    }
 }
