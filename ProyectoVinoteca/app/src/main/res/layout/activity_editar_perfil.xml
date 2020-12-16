@@ -1,168 +1,91 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <EditText
-        android:id="@+id/nombre_ET"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="84dp"
-        android:ems="10"
-        android:inputType="textPersonName"
-        android:textSize="16sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.846"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <EditText
-        android:id="@+id/temperatura_ET"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="424dp"
-        android:ems="10"
-        android:hint="Temperatura Actual"
-        android:inputType="textPersonName"
-        android:textSize="16sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.846"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <EditText
-        android:visibility="gone"
-        android:id="@+id/contraseña_ET"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="144dp"
-        android:ems="10"
-        android:inputType="textPersonName|textPassword"
-        android:textSize="16sp"
-        app:layout_constraintEnd_toEndOf="@+id/nombre_ET"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="@+id/nombre_ET"
-        app:layout_constraintTop_toTopOf="parent" />
-
     <TextView
-        android:visibility="gone"
-        android:id="@+id/textView5"
-        android:layout_width="140dp"
-        android:layout_height="24dp"
-        android:layout_marginStart="32dp"
-        android:text="@string/label_contraseña"
-        android:textSize="16sp"
-        app:layout_constraintBottom_toBottomOf="@+id/contraseña_ET"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/contraseña_ET"
-        app:layout_constraintVertical_bias="0.611" />
-
-    <TextView
-        android:id="@+id/textView4"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="32dp"
-        android:text="@string/label_nombre"
-        android:textSize="16sp"
-        app:layout_constraintBottom_toBottomOf="@+id/nombre_ET"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/nombre_ET"
-        app:layout_constraintVertical_bias="0.571" />
-
-    <Button
-        android:id="@+id/cambiarPerfil"
-        style="my"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="48dp"
-        android:layout_marginEnd="52dp"
-        android:onClick="confirmarEdicion"
-        android:text="Actualizar"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/nombre_ET" />
-
-    <Button
-        android:id="@+id/cambiarConstrasenya"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="12dp"
-        android:onClick="constrasenyaEmail"
-        android:text="@string/label_cambiarcontraseñaporemail"
-        app:layout_constraintEnd_toEndOf="@+id/cambiarPerfil"
-        app:layout_constraintHorizontal_bias="0.534"
-        app:layout_constraintStart_toStartOf="@+id/btn_volver_1"
-        app:layout_constraintTop_toBottomOf="@+id/cambiarPerfil" />
-
-    <Button
-        android:id="@+id/btn_volver_1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="60dp"
-        android:onClick="volver"
-        android:text="@string/button_volver"
-        app:layout_constraintBottom_toBottomOf="@+id/cambiarPerfil"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/cambiarPerfil"
-        app:layout_constraintVertical_bias="1.0" />
-
-    <Button
-        android:id="@+id/btn_volver_2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="60dp"
-        android:onClick="volver"
-        android:text="@string/button_volver"
-        app:layout_constraintBottom_toBottomOf="@+id/cambiarExtra"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/cambiarExtra" />
-
-    <TextView
-        android:id="@+id/textView6"
+        android:layout_gravity="center"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:text="EDITAR PERFIL"
         android:textSize="25sp"
-        android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:textStyle="bold" />
 
-    <TextView
-        android:id="@+id/textView9"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="356dp"
-        android:text="EXTRA"
-        android:textSize="25sp"
-        android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:orientation="horizontal"
+        android:layout_marginTop="64dp"
+        android:layout_height="wrap_content">
 
-    <TextView
-        android:id="@+id/textView11"
-        android:layout_width="wrap_content"
+        <TextView
+            android:layout_width="0dp"
+            android:textAlignment="center"
+            android:layout_height="wrap_content"
+            android:text="@string/label_nombre"
+            android:layout_weight="1"
+            android:textSize="16sp" />
+
+        <EditText
+            android:id="@+id/nombre_ET"
+            android:layout_width="100dp"
+            android:layout_marginHorizontal="32dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:ems="10"
+            android:inputType="textPersonName"
+            android:textSize="16sp" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="32dp"
-        android:text="Temperatura:"
-        android:textSize="16sp"
-        app:layout_constraintBottom_toBottomOf="@+id/temperatura_ET"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/temperatura_ET" />
+        android:layout_marginTop="32dp"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/btn_volver_1"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:onClick="volver"
+            android:layout_marginEnd="24dp"
+            android:layout_marginStart="48dp"
+            android:text="@string/button_volver"/>
+
+        <Button
+            android:id="@+id/cambiarPerfil"
+            android:layout_marginStart="24dp"
+            android:layout_marginEnd="48dp"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:text="Actualizar" />
+
+    </LinearLayout>
 
     <Button
-        android:id="@+id/cambiarExtra"
+        android:id="@+id/cambiarConstrasenya"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
-        android:layout_marginEnd="52dp"
-        android:onClick="cambiarExtra"
-        android:text="Actualizar"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/temperatura_ET" />
+        android:layout_marginTop="16dp"
+        android:layout_gravity="center"
+        android:onClick="constrasenyaEmail"
+        android:text="@string/label_cambiarcontraseñaporemail" />
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    <Button
+        android:id="@+id/btn_link"
+        android:layout_width="wrap_content"
+        android:layout_gravity="center"
+        android:paddingHorizontal="24dp"
+        android:layout_height="wrap_content"
+        android:textColor="@color/colorBlanco"
+        android:layout_marginTop="32dp"
+        android:background="@drawable/button_link_acc"
+        android:text="Vincular cuenta de google" />
+
+</LinearLayout>

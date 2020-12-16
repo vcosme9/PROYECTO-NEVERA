@@ -15,6 +15,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 
+import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
@@ -42,10 +43,15 @@ public class editarPerfil extends Activity {
 
         FirebaseUser usuario = FirebaseAuth.getInstance().getCurrentUser();
 
+        Button linkear = findViewById(R.id.btn_link);
+        linkear.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                linkearCuenta();
+            }
+        });
         Button volver1 = findViewById(R.id.btn_volver_1);
-        Button volver2 = findViewById(R.id.btn_volver_2);
         Button cambiar1 = findViewById(R.id.cambiarPerfil);
-        Button cambiar2 = findViewById(R.id.cambiarExtra);
         Button cambiarContraseña = findViewById(R.id.cambiarConstrasenya);
         campoNombre = findViewById(R.id.nombre_ET);
         email = usuario.getEmail();
@@ -70,7 +76,6 @@ public class editarPerfil extends Activity {
             }
         });
         volver1.setOnClickListener(volver);
-        volver2.setOnClickListener(volver);
 
     }
 
@@ -99,5 +104,15 @@ public class editarPerfil extends Activity {
                         }
                     });
         }
+    }
+
+    private void linkearCuenta(){
+        Intent i = new Intent(this, CustomLoginActivity.class);
+        i.putExtra("link",true);
+                i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP
+                        | Intent.FLAG_ACTIVITY_NEW_TASK
+                        | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(i);
+        finish();
     }
 }

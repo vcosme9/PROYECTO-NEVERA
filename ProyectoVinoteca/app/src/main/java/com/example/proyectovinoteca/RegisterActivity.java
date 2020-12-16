@@ -18,6 +18,7 @@ import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserProfileChangeRequest;
 
 public class RegisterActivity extends Activity {
@@ -35,20 +36,20 @@ public class RegisterActivity extends Activity {
         setContentView(R.layout.activity_register);
         email = getIntent().getStringExtra("email");
         password = getIntent().getStringExtra("password");
-        etCorreo = (EditText) findViewById(R.id.correo);
+        etCorreo = findViewById(R.id.correo);
         etCorreo.setText(email);
-        etContraseña = (EditText) findViewById(R.id.contraseña);
-        etNombre = (EditText) findViewById(R.id.nombre);
+        etContraseña = findViewById(R.id.contraseña);
+        etNombre = findViewById(R.id.nombre);
         etContraseña.setText(password);
-        tilCorreo = (TextInputLayout) findViewById(R.id.til_correo);
-        tilContraseña = (TextInputLayout) findViewById(R.id.til_contraseña);
-        contenedor = (ViewGroup) findViewById(R.id.contenedor);
+        tilCorreo = findViewById(R.id.til_correo);
+        tilContraseña = findViewById(R.id.til_contraseña);
+        contenedor = findViewById(R.id.contenedor);
         dialogo = new ProgressDialog(this);
         dialogo.setTitle("Verificando usuario");
         dialogo.setMessage("Por favor espere...");
-        verificaSiUsuarioValidado();
+        //verificaSiUsuarioValidado();
     }
-    private void verificaSiUsuarioValidado() {
+    /*private void verificaSiUsuarioValidado() {
         if (auth.getCurrentUser() != null) {
             Intent i = new Intent(this, MainActivity.class);
             i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP
@@ -59,7 +60,7 @@ public class RegisterActivity extends Activity {
             startActivity(i);
             finish();
         }
-    }
+    }*/
 
     public void lanzarInicioSesion(View v) {
         Intent i = new Intent(this, CustomLoginActivity.class);
@@ -69,6 +70,7 @@ public class RegisterActivity extends Activity {
         String res = etCorreo.getText().toString();
         i.putExtra("email", etCorreo.getText().toString());
         i.putExtra("password", etContraseña.getText().toString());
+        i.putExtra("bool", "activado");
         startActivity(i);
         finish();
     }
@@ -108,7 +110,9 @@ public class RegisterActivity extends Activity {
                         @Override
                         public void onComplete(Task<Void> task) {
                             if (task.isSuccessful()) { //success on updating user profile
-                                verificaSiUsuarioValidado();
+                                Toast.makeText(RegisterActivity.this, "Mira tu correo...", Toast.LENGTH_SHORT).show();
+                                auth.getCurrentUser().sendEmailVerification();
+                                lanzarInicioSesion(null);
                             } else { //failed on updating user profile
                                 Toast.makeText(RegisterActivity.this, "Ha ocurrido un error",
                                         Toast.LENGTH_SHORT).show();
@@ -141,8 +145,5 @@ public class RegisterActivity extends Activity {
             return true;
         }
         return false;
-    }
-    public void firebaseUI(View v) {
-        startActivity(new Intent(this, LoginActivity.class));
     }
 }

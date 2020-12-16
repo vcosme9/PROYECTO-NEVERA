@@ -3,7 +3,7 @@
     <item android:state_pressed="false">
         <shape android:shape="rectangle">
             <!-- background -->
-            <solid android:color="@color/fui_transparent" />
+            <solid android:color="@color/colorAzul" />
             <!-- border -->
             <stroke android:width="3px" android:color="@color/colorBlanco" />
 
@@ -14,7 +14,7 @@
     <item android:state_pressed="true">
         <shape android:shape="rectangle">
             <!-- background -->
-            <solid android:color="@color/fui_transparent" />
+            <solid android:color="#1134A0" />
             <!-- border -->
             <stroke android:width="3px" android:color="#80ffff" />
 

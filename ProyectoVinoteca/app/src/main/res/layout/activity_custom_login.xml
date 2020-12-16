@@ -7,11 +7,19 @@
     android:layout_height="match_parent"
     android:background="@drawable/fondologin">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <LinearLayout
+        android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_margin="16dp"
         android:paddingTop="25dp">
+        <TextView
+            android:gravity="center"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="#ffffff"
+            android:textSize="40dp"
+            android:text="Login"/>
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/til_correo"
@@ -32,7 +40,8 @@
                 <ImageView
                     android:layout_width="40dp"
                     android:layout_height="40dp"
-                    android:background="@drawable/email" />
+                    android:layout_marginTop="7dp"
+                    android:background="@android:drawable/sym_action_email" />
 
                 <EditText
                     android:id="@+id/correo"
@@ -84,44 +93,34 @@
             </LinearLayout>
         </com.google.android.material.textfield.TextInputLayout>
 
+
         <Button
-            android:id="@+id/inicio_sesión"
-            android:layout_width="0dp"
+            android:layout_marginTop="32dp"
+            android:id="@+id/btn_inicio_sesion"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="24dp"
             android:background="@drawable/button_shape_login"
-            android:onClick="inicioSesiónCorreo"
             android:text="Iniciar Sesión"
-            android:textColor="@color/colorBlanco"
-            app:layout_constraintHorizontal_bias="0.6"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toLeftOf="@+id/registro"
-            app:layout_constraintTop_toBottomOf="@id/til_contraseña"
-            android:layout_marginRight="10dp"/>
+            android:textColor="@color/colorBlanco"/>
 
-        <Button
-            android:id="@+id/registro"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:background="@drawable/button_shape_login"
-            android:onClick="lanzarRegistro"
-            android:text="Registro"
-            android:textColor="@color/colorBlanco"
-            app:layout_constraintLeft_toRightOf="@+id/inicio_sesión"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/inicio_sesión" />
-
-        <Button
+        <com.google.android.gms.common.SignInButton
             android:id="@+id/firebase_ui"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:text="Iniciar sesión con Google"/>
+
+        <TextView
+            android:id="@+id/registro"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:onClick="lanzarRegistro"
+            android:foreground="?android:attr/selectableItemBackground"
             android:layout_marginTop="24dp"
-            android:onClick="firebaseUI"
-            android:text="Iniciar sesión con FirebaseUI"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/inicio_sesión"
-            android:textColor="@color/colorBlanco"
-            android:background="@drawable/button_shape_login"/>
-    </androidx.constraintlayout.widget.ConstraintLayout>
+            android:textSize="16dp"
+            android:gravity="center"
+            android:text="¿No tienes una cuenta? Regístrate."
+            android:textColor="@color/colorBlanco"/>
+
+    </LinearLayout>
 </ScrollView>
