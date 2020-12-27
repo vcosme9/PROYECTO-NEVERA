@@ -1,115 +1,173 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/scrollView1"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/contenedor"
     android:layout_width="match_parent"
     android:layout_height="wrap_content" >
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+
+    <ImageView
+        android:id="@+id/imageView2"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="350dp"
+        android:background="@drawable/profilebackground"/>
 
-        <ImageView
-            android:id="@+id/imageView2"
-            android:layout_width="match_parent"
-            android:layout_height="350dp"
-            android:background="@drawable/profilebackground"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
 
-        <de.hdodenhof.circleimageview.CircleImageView
-            android:id="@+id/circleImageView"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
-            android:layout_marginTop="40dp"
-            android:src="@drawable/fotoperfil"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.498"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+        <RelativeLayout
+            android:foreground="?android:attr/selectableItemBackground"
+            android:id="@+id/relLay_foto"
+            android:layout_gravity="center"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="40dp">
 
-        <TextView
-            android:id="@+id/nombre_TV"
+            <com.android.volley.toolbox.NetworkImageView
+                android:id="@+id/net_foto_user"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:background="@drawable/boton_redondo_desactivado" />
+            <ImageView
+                android:layout_gravity="center"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:background="@drawable/circular_dark"/>
+
+        </RelativeLayout>
+
+        <EditText
+            android:layout_gravity="center"
+            android:id="@+id/nombre_ET"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="24dp"
+            android:inputType="text"
             android:text="Aqui va el nombre"
             android:textSize="25sp"
             android:textStyle="bold"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/circleImageView" />
+            android:autofillHints="" />
 
         <TextView
+            android:layout_gravity="center"
             android:id="@+id/correo_TV"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
-            android:text="Aqui va el correo"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/nombre_TV" />
+            android:text="Aqui va el correo" />
+
+        <LinearLayout
+            android:layout_marginTop="64dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:baselineAligned="false">
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/proveedor_TV"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="PROVEEDOR"
+                    android:textSize="22sp"
+                    android:textStyle="bold"/>
+
+                <TextView
+                    android:id="@+id/proveedorFB_TB"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Aqui va el proveedor"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="0dp"
+                android:gravity="center"
+                android:layout_weight="1"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:id="@+id/rol_TV"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="ROL"
+                    android:textSize="22sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/rolFB_TB"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Aqui va el rol"/>
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <Button
+            android:foreground="?android:attr/selectableItemBackground"
+            android:id="@+id/cambiarConstrasenya"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="32dp"
+            android:layout_gravity="center"
+            android:textColor="#ffffff"
+            android:background="@color/colorPrimaryDark"
+            android:paddingHorizontal="16dp"
+            android:onClick="constrasenyaEmail"
+            android:text="@string/label_cambiarcontraseñaporemail" />
+    </LinearLayout>
+
+
+    <RelativeLayout
+        android:layout_alignParentBottom="true"
+        android:foreground="?android:attr/selectableItemBackground"
+        android:layout_marginRight="32dp"
+        android:layout_alignParentRight="true"
+        android:id="@+id/relLay_guardar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+        <ImageView
+            android:layout_marginBottom="64dp"
+            android:layout_width="60dp"
+            android:background="@drawable/boton_redondo_activado"
+            android:layout_height="60dp"/>
+        <ImageView
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_margin="10dp"
+            android:background="@android:drawable/ic_menu_save" />
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_alignParentBottom="true"
+        android:foreground="?android:attr/selectableItemBackground"
+        android:layout_marginLeft="32dp"
+        android:id="@+id/relLay_cancelar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+        <ImageView
+            android:layout_marginBottom="64dp"
+            android:layout_width="60dp"
+            android:background="@drawable/boton_redondo_desactivado"
+            android:layout_height="60dp"/>
 
         <ImageView
-            android:id="@+id/editar_FAB"
-            android:layout_width="75dp"
-            android:layout_height="75dp"
-            android:layout_marginStart="268dp"
-            android:layout_marginBottom="24dp"
-            android:background="@color/colorBlanco"
-            android:onClick="lanzarEditarPerfil"
-            android:src="@drawable/botoneditarblanco"
-            app:layout_constraintBottom_toBottomOf="@+id/imageView2"
-            app:layout_constraintStart_toStartOf="@+id/imageView2" />
-
-        <TextView
-            android:id="@+id/proveedor_TV"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="PROVEEDOR"
-            android:textSize="22sp"
-            android:textStyle="bold"
-            app:layout_constraintEnd_toStartOf="@+id/rol_TV"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/imageView2"/>
-
-        <TextView
-            android:id="@+id/rolFB_TB"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
-            android:layout_marginBottom="16dp"
-            android:text="Aqui va el rol"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="@+id/rol_TV"
-            app:layout_constraintHorizontal_bias="0.475"
-            app:layout_constraintStart_toStartOf="@+id/rol_TV"
-            app:layout_constraintTop_toBottomOf="@+id/rol_TV" />
-
-        <TextView
-            android:id="@+id/rol_TV"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="ROL"
-            android:textSize="22sp"
-            android:textStyle="bold"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toEndOf="@+id/proveedor_TV"
-            app:layout_constraintTop_toBottomOf="@+id/imageView2" />
-
-        <TextView
-            android:id="@+id/proveedorFB_TB"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
-            android:text="Aqui va el proveedor"
-            app:layout_constraintEnd_toEndOf="@+id/proveedor_TV"
-            app:layout_constraintStart_toStartOf="@+id/proveedor_TV"
-            app:layout_constraintTop_toBottomOf="@+id/proveedor_TV" />
-
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
-</ScrollView>
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginEnd="10dp"
+            android:layout_marginBottom="10dp"
+            android:background="@android:drawable/ic_menu_close_clear_cancel" />
+    </RelativeLayout>
+</RelativeLayout>

@@ -12,11 +12,22 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="24dp">
 
-        <com.android.volley.toolbox.NetworkImageView
-            android:id="@+id/imagen"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
-            android:background="@drawable/user_default"/>
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <com.android.volley.toolbox.NetworkImageView
+                android:id="@+id/imagen"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:background="@drawable/user_default"/>
+            <ImageView
+                android:layout_gravity="center"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:background="@drawable/circular"/>
+
+        </RelativeLayout>
 
         <LinearLayout
         android:layout_width="match_parent"

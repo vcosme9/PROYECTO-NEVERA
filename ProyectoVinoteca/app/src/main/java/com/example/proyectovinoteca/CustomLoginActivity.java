@@ -49,9 +49,10 @@ import static android.content.ContentValues.TAG;
 //
 public class CustomLoginActivity extends AppCompatActivity {
 
+    private FuncionGlobal fG;
+
     private String email, password;
     private FirebaseAuth auth = FirebaseAuth.getInstance();
-    private ViewGroup contenedor;
     private EditText etCorreo, etContraseña;
     private TextInputLayout tilCorreo, tilContraseña;
     private ProgressDialog dialogo;
@@ -61,6 +62,10 @@ public class CustomLoginActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_custom_login);
+
+        fG = new FuncionGlobal(getApplicationContext());
+        fG.contenedor = findViewById(R.id.contenedor);
+        dialogo = fG.createDialog(this, "Verificando usuario", "Por favor espere...");
 
         //para el inicio con Google
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(
@@ -100,13 +105,7 @@ public class CustomLoginActivity extends AppCompatActivity {
         etContraseña.setText(password);
         tilCorreo = findViewById(R.id.til_correo);
         tilContraseña = findViewById(R.id.til_contraseña);
-        contenedor = findViewById(R.id.contenedor);
 
-        //para poner una carga mientras se realiza una acción
-        dialogo = new ProgressDialog(this);
-        dialogo.setTitle("Verificando usuario");
-        dialogo.setMessage("Por favor espere...");
-        dialogo.setIcon(R.mipmap.ic_custom_launcher_2_round);
         //se intenta entrar a la app directamente. Este caso se daría si abrimos la app pero ya
         //habíamos iniciado sesión
         FirebaseUser u = auth.getCurrentUser();
@@ -139,7 +138,7 @@ public class CustomLoginActivity extends AppCompatActivity {
                             } else {
                                 dialogo.dismiss();
                                 Log.d(ValorGlobal.log, task.getException().getMessage());
-                                mensaje("Usuario inexistente o no validado");
+                                fG.mensaje("Usuario inexistente o no validado");
                             }
                         }
                     });
@@ -155,11 +154,6 @@ public class CustomLoginActivity extends AppCompatActivity {
         i.putExtra("password", etContraseña.getText().toString());
         startActivity(i);
         finish();
-    }
-
-    //usado para mostrar mensajes de error por pantalla
-    private void mensaje(String mensaje) {
-        Snackbar.make(contenedor, mensaje, Snackbar.LENGTH_LONG).show();
     }
 
     //si se cumplen las condiciones se podrá registrar el usuario
@@ -201,7 +195,7 @@ public class CustomLoginActivity extends AppCompatActivity {
                     googleAuth(result.getSignInAccount());
                 } else {
                     Log.d(ValorGlobal.log, result.getStatus().getStatusMessage());
-                    mensaje("Error de autentificación con Google");
+                    fG.mensaje("Error de autentificación con Google");
                 }
             }
         }
@@ -219,7 +213,7 @@ public class CustomLoginActivity extends AppCompatActivity {
                         if (!task.isSuccessful()) {
                             Log.d(ValorGlobal.log, task.getException().toString());
                             dialogo.dismiss();
-                            mensaje(task.getException().getLocalizedMessage());
+                            fG.mensaje(task.getException().getLocalizedMessage());
                         } else {
                             //compruebo si ya existe una cuenta creada con email y pass. Si es así, puedo entrar
                             i.fetchSignInMethodsForEmail(i.getCurrentUser().getEmail()).addOnCompleteListener(new OnCompleteListener<SignInMethodQueryResult>() {
@@ -245,7 +239,7 @@ public class CustomLoginActivity extends AppCompatActivity {
                                             @Override
                                             public void onComplete(@NonNull Task<Void> task) {
                                                 dialogo.dismiss();
-                                                mensaje("Ninguna cuenta vinculada");
+                                                fG.mensaje("Ninguna cuenta vinculada");
                                             }
                                         });
                                     }

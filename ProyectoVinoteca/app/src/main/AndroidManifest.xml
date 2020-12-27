@@ -20,13 +20,11 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
 
-        <activity android:name=".LoginActivity"
-            android:screenOrientation="portrait"/>
         <activity android:name=".Tab_Guia.MapaActivity"
             android:screenOrientation="portrait"/>
-        <activity android:name=".editarPerfil"/>
         <activity android:name=".Tab_Guia.ComprarVinos"/>
-        <activity android:name=".CustomLoginActivity">
+        <activity android:name=".CustomLoginActivity"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -36,8 +34,8 @@
         <activity android:name=".MainActivity"
             android:screenOrientation="portrait"/>
 
-        <activity android:name=".RegisterActivity">
-        </activity>
+        <activity android:name=".RegisterActivity"
+            android:screenOrientation="portrait"/>
 
         <activity android:name=".comentarios.ComentariosActivity"/>
 
