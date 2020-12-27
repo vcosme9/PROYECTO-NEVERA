@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
@@ -22,6 +23,8 @@ import com.google.android.gms.tasks.Task;
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.GoogleAuthProvider;
+import com.google.firebase.auth.SignInMethodQueryResult;
 import com.google.firebase.auth.UserProfileChangeRequest;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -29,6 +32,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import org.w3c.dom.Text;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class editarPerfil extends Activity {
@@ -42,14 +46,6 @@ public class editarPerfil extends Activity {
         setContentView(R.layout.activity_editar_perfil);
 
         FirebaseUser usuario = FirebaseAuth.getInstance().getCurrentUser();
-
-        Button linkear = findViewById(R.id.btn_link);
-        linkear.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                linkearCuenta();
-            }
-        });
         Button volver1 = findViewById(R.id.btn_volver_1);
         Button cambiar1 = findViewById(R.id.cambiarPerfil);
         Button cambiarContraseña = findViewById(R.id.cambiarConstrasenya);
@@ -104,15 +100,5 @@ public class editarPerfil extends Activity {
                         }
                     });
         }
-    }
-
-    private void linkearCuenta(){
-        Intent i = new Intent(this, CustomLoginActivity.class);
-        i.putExtra("link",true);
-                i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP
-                        | Intent.FLAG_ACTIVITY_NEW_TASK
-                        | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-        startActivity(i);
-        finish();
     }
 }

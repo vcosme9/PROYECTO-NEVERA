@@ -22,15 +22,14 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserProfileChangeRequest;
 
 public class RegisterActivity extends Activity {
-    private String email;
-    private String password;
+
+    private String email, password;
     private FirebaseAuth auth = FirebaseAuth.getInstance();
-    private String correo = "";
-    private String contraseña = "";
     private ViewGroup contenedor;
     private EditText etCorreo, etContraseña, etNombre;
     private TextInputLayout tilCorreo, tilContraseña;
     private ProgressDialog dialogo;
+
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
@@ -45,22 +44,10 @@ public class RegisterActivity extends Activity {
         tilContraseña = findViewById(R.id.til_contraseña);
         contenedor = findViewById(R.id.contenedor);
         dialogo = new ProgressDialog(this);
-        dialogo.setTitle("Verificando usuario");
+        dialogo.setTitle("Creando usuario");
         dialogo.setMessage("Por favor espere...");
-        //verificaSiUsuarioValidado();
+        dialogo.setIcon(R.mipmap.ic_custom_launcher_2_round);
     }
-    /*private void verificaSiUsuarioValidado() {
-        if (auth.getCurrentUser() != null) {
-            Intent i = new Intent(this, MainActivity.class);
-            i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP
-                    | Intent.FLAG_ACTIVITY_NEW_TASK
-                    | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-            i.putExtra("email", etCorreo.getText());
-            i.putExtra("password", etContraseña.getText());
-            startActivity(i);
-            finish();
-        }
-    }*/
 
     public void lanzarInicioSesion(View v) {
         Intent i = new Intent(this, CustomLoginActivity.class);
@@ -70,14 +57,14 @@ public class RegisterActivity extends Activity {
         String res = etCorreo.getText().toString();
         i.putExtra("email", etCorreo.getText().toString());
         i.putExtra("password", etContraseña.getText().toString());
-        i.putExtra("bool", "activado");
         startActivity(i);
         finish();
     }
+
     public void registroCorreo(View v) {
+        dialogo.show();
         if (verificaCampos()) {
-            dialogo.show();
-            auth.createUserWithEmailAndPassword(correo, contraseña)
+            auth.createUserWithEmailAndPassword(email, password)
                     .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                         @Override
                         public void onComplete(@NonNull Task<AuthResult> task) {
@@ -89,9 +76,13 @@ public class RegisterActivity extends Activity {
                             }
                         }
                     });
+        } else {
+            dialogo.dismiss();
         }
     }
 
+    //al crear un usuario, solo se crea con email y contraseña. La solución para crearlo con nombre
+    //ha sido actualizar el nombre del usuario una vez creado.
     private void updatename() {
         //updating user's profile data
         String nameUser = etNombre.getText().toString();
@@ -100,6 +91,7 @@ public class RegisterActivity extends Activity {
                 .build();
 
         if (TextUtils.isEmpty(nameUser)) {
+            dialogo.dismiss();
             etNombre.setError("Introduce tu nombre completo");
         }
 
@@ -109,8 +101,9 @@ public class RegisterActivity extends Activity {
                     .addOnCompleteListener(new OnCompleteListener<Void>() {
                         @Override
                         public void onComplete(Task<Void> task) {
+                            dialogo.dismiss();
                             if (task.isSuccessful()) { //success on updating user profile
-                                Toast.makeText(RegisterActivity.this, "Mira tu correo...", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(RegisterActivity.this, "Revisa tu correo", Toast.LENGTH_SHORT).show();
                                 auth.getCurrentUser().sendEmailVerification();
                                 lanzarInicioSesion(null);
                             } else { //failed on updating user profile
@@ -122,22 +115,25 @@ public class RegisterActivity extends Activity {
         }
     }
 
+    //usado para mostrar mensajes de error por pantalla
     private void mensaje(String mensaje) {
         Snackbar.make(contenedor, mensaje, Snackbar.LENGTH_LONG).show();
     }
+
+    //si se cumplen las condiciones se podrá registrar el usuario
     private boolean verificaCampos() {
-        correo = etCorreo.getText().toString();
-        contraseña = etContraseña.getText().toString();
+        email = etCorreo.getText().toString();
+        password = etContraseña.getText().toString();
         tilCorreo.setError(""); tilContraseña.setError("");
-        if (correo.isEmpty()) {
+        if (email.isEmpty()) {
             tilCorreo.setError("Introduce un correo");
-        } else if (!correo.matches(".+@.+[.].+")) {
+        } else if (!email.matches(".+@.+[.].+")) {
             tilCorreo.setError("Correo no válido");
-        } else if (contraseña.isEmpty()) {
+        } else if (password.isEmpty()) {
             tilContraseña.setError("Introduce una contraseña");
-        } else if (contraseña.length()<6) {
+        } else if (password.length()<6) {
             tilContraseña.setError("Ha de contener al menos 6 caracteres");
-        } else if (!contraseña.matches(".*[0-9].*")) {
+        } else if (!password.matches(".*[0-9].*")) {
             tilContraseña.setError("Ha de contener un número");
         } else if (etNombre.getText().toString().isEmpty()){
             tilContraseña.setError("Has de introducir un nombre de usuario");

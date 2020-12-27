@@ -77,15 +77,4 @@
         android:onClick="constrasenyaEmail"
         android:text="@string/label_cambiarcontraseñaporemail" />
 
-    <Button
-        android:id="@+id/btn_link"
-        android:layout_width="wrap_content"
-        android:layout_gravity="center"
-        android:paddingHorizontal="24dp"
-        android:layout_height="wrap_content"
-        android:textColor="@color/colorBlanco"
-        android:layout_marginTop="32dp"
-        android:background="@drawable/button_link_acc"
-        android:text="Vincular cuenta de google" />
-
 </LinearLayout>

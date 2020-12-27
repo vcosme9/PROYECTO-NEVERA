@@ -36,6 +36,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
 import com.google.firebase.auth.SignInMethodQueryResult;
+import com.google.firebase.auth.UserInfo;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -47,23 +48,21 @@ import static android.content.ContentValues.TAG;
 //
 //
 public class CustomLoginActivity extends AppCompatActivity {
-    private String email;
-    private String password;
+
+    private String email, password;
     private FirebaseAuth auth = FirebaseAuth.getInstance();
-    private String correo;
-    private String contraseña;
     private ViewGroup contenedor;
     private EditText etCorreo, etContraseña;
     private TextInputLayout tilCorreo, tilContraseña;
     private ProgressDialog dialogo;
     private static final int RC_SIGN_IN = 123;
     private GoogleApiClient googleApiClient;
-    private boolean link;
-    private GoogleSignInOptions gso;
+
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_custom_login);
-        link = getIntent().getBooleanExtra("link", false);
+
+        //para el inicio con Google
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(
                 GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestIdToken(getString(R.string.default_web_client_id))
@@ -77,7 +76,6 @@ public class CustomLoginActivity extends AppCompatActivity {
                 })
                 .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
                 .build();
-
         SignInButton googleLogin = findViewById(R.id.firebase_ui);
         googleLogin.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -93,9 +91,9 @@ public class CustomLoginActivity extends AppCompatActivity {
             }
         });
 
+        //en caso de haber puesto el email/contraseña en la pestaña de registro, se pondrán aquí automáticamente
         email = getIntent().getStringExtra("email");
         password = getIntent().getStringExtra("password");
-        String appJustOpened = getIntent().getStringExtra("bool");
         etCorreo = findViewById(R.id.correo);
         etCorreo.setText(email);
         etContraseña = findViewById(R.id.contraseña);
@@ -103,56 +101,51 @@ public class CustomLoginActivity extends AppCompatActivity {
         tilCorreo = findViewById(R.id.til_correo);
         tilContraseña = findViewById(R.id.til_contraseña);
         contenedor = findViewById(R.id.contenedor);
+
+        //para poner una carga mientras se realiza una acción
         dialogo = new ProgressDialog(this);
         dialogo.setTitle("Verificando usuario");
         dialogo.setMessage("Por favor espere...");
-        if(link){
-            loginGoogle(null);
-        } else {
-            if (auth.getCurrentUser() != null) {
-                if (auth.getCurrentUser().isEmailVerified()) {
-                    Intent i = new Intent(this, MainActivity.class);
-                    i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP
-                            | Intent.FLAG_ACTIVITY_NEW_TASK
-                            | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                    startActivity(i);
-                    finish();
-                }
+        dialogo.setIcon(R.mipmap.ic_custom_launcher_2_round);
+        //se intenta entrar a la app directamente. Este caso se daría si abrimos la app pero ya
+        //habíamos iniciado sesión
+        FirebaseUser u = auth.getCurrentUser();
+        if (u != null) {
+            if(u.isEmailVerified()) {
+                abrirApp();
             }
         }
     }
-    private void verificaSiUsuarioValidado() {
-        Log.d("aaaaaa", "sí, entra por aquí");
-        if (FirebaseAuth.getInstance().getCurrentUser() != null && !link && FirebaseAuth.getInstance().getCurrentUser().isEmailVerified()) {
-            Intent i = new Intent(this, MainActivity.class);
-            i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP
-                    | Intent.FLAG_ACTIVITY_NEW_TASK
-                    | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-            startActivity(i);
-            finish();
-        } else {
-            Toast.makeText(this, "El correo no está autentificado", Toast.LENGTH_SHORT).show();
-            //dialogo.dismiss();
-        }
+
+    //abre la app (abre el MainActivity)
+    private void abrirApp(){
+        Intent i = new Intent(this, MainActivity.class);
+        i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP
+                | Intent.FLAG_ACTIVITY_NEW_TASK
+                | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(i);
+        finish();
     }
 
     public void inicioSesionCorreo(View v) {
         if (verificaCampos()) {
-            //dialogo.show();
-            auth.signInWithEmailAndPassword(correo, contraseña)
+            dialogo.show();
+            auth.signInWithEmailAndPassword(email, password)
                     .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                         @Override
                         public void onComplete(@NonNull Task<AuthResult> task) {
                             if (task.isSuccessful()) {
-                                verificaSiUsuarioValidado();
+                                abrirApp();
                             } else {
                                 dialogo.dismiss();
-                                mensaje(task.getException().getLocalizedMessage());
+                                Log.d(ValorGlobal.log, task.getException().getMessage());
+                                mensaje("Usuario inexistente o no validado");
                             }
                         }
                     });
         }
     }
+
     public void lanzarRegistro(View v) {
         Intent i = new Intent(this, RegisterActivity.class);
         i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP
@@ -164,69 +157,38 @@ public class CustomLoginActivity extends AppCompatActivity {
         finish();
     }
 
+    //usado para mostrar mensajes de error por pantalla
     private void mensaje(String mensaje) {
         Snackbar.make(contenedor, mensaje, Snackbar.LENGTH_LONG).show();
     }
+
+    //si se cumplen las condiciones se podrá registrar el usuario
     private boolean verificaCampos() {
-        correo = etCorreo.getText().toString();
-        contraseña = etContraseña.getText().toString();
+        email = etCorreo.getText().toString();
+        password = etContraseña.getText().toString();
         tilCorreo.setError(""); tilContraseña.setError("");
-        if (correo.isEmpty()) {
+        if (email.isEmpty()) {
             tilCorreo.setError("Introduce un correo");
-        } else if (!correo.matches(".+@.+[.].+")) {
+        } else if (!email.matches(".+@.+[.].+")) {
             tilCorreo.setError("Correo no válido");
-        } else if (contraseña.isEmpty()) {
+        } else if (password.isEmpty()) {
             tilContraseña.setError("Introduce una contraseña");
-        } else if (contraseña.length()<6) {
+        } else if (password.length()<6) {
             tilContraseña.setError("Ha de contener al menos 6 caracteres");
-        } else if (!contraseña.matches(".*[0-9].*")) {
+        } else if (!password.matches(".*[0-9].*")) {
             tilContraseña.setError("Ha de contener un número");
         } else {
             return true;
         }
         return false;
     }
+
+    //inicia la actividad del API de Google
     public void loginGoogle(View v) {
-        /*FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-        if (user != null) {
-            if (user.isEmailVerified()) {
-                Intent i = new Intent(this, MainActivity.class);
-                i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP
-                        | Intent.FLAG_ACTIVITY_NEW_TASK
-                        | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                startActivity(i);
-                finish();
-            } else {
-                Toast.makeText(this, "Mira tu correo ... ", Toast.LENGTH_LONG).show();
-                user.sendEmailVerification();
-                FirebaseAuth.getInstance().signOut();
-                loginGoogle(null);
-            }
-        } else {
-            List<AuthUI.IdpConfig> providers = Arrays.asList(
-                    new AuthUI.IdpConfig.GoogleBuilder().build());
-            startActivityForResult(
-                    AuthUI.getInstance().createSignInIntentBuilder()
-                            .setAvailableProviders(providers)
-                            .setTheme(R.style.LoginTheme)
-                            .setIsSmartLockEnabled(false)
-                            .build(),
-                    RC_SIGN_IN);
-        }*/
         Intent i = Auth.GoogleSignInApi.getSignInIntent(googleApiClient);
         startActivityForResult(i, RC_SIGN_IN);
-
-        /*googleApiClient = new GoogleApiClient.Builder(this)
-                .enableAutoManage(this, new GoogleApiClient.OnConnectionFailedListener() {
-                    @Override
-                    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
-                        Log.d("aaaaaa", "weón");
-                    }
-                })
-                .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
-                .build();*/
-
     }
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -235,65 +197,63 @@ public class CustomLoginActivity extends AppCompatActivity {
                 GoogleSignInResult result = Auth.GoogleSignInApi
                         .getSignInResultFromIntent(data);
                 if (result.isSuccess()) {
+                    dialogo.show();
                     googleAuth(result.getSignInAccount());
                 } else {
+                    Log.d(ValorGlobal.log, result.getStatus().getStatusMessage());
                     mensaje("Error de autentificación con Google");
                 }
             }
         }
-
     }
+
+    //se intenta iniciar sesión con el usuario de Google
     private void googleAuth(GoogleSignInAccount acct) {
-        AuthCredential credential = GoogleAuthProvider.getCredential(
-                acct.getIdToken(), null);
-        if(link){
-            unificarCon(credential);
-        } else {
-
-            FirebaseAuth.getInstance().signInWithCredential(credential)
-                    .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-                        @Override
-                        public void onComplete(@NonNull Task<AuthResult> task) {
-                            if (!task.isSuccessful()) {
-                                Log.d("aaaaaa", "Parece que NO se pudo");
-                                mensaje(task.getException().getLocalizedMessage());
-                            } else {
-                                Log.d("aaaaaa", "Parece que SÍ se pudo");
-                                //compruebo si ya existe una cuenta creada con email y pass. Si es así, puedo entrar
-                                FirebaseAuth.getInstance().fetchSignInMethodsForEmail(FirebaseAuth.getInstance().getCurrentUser().getEmail()).addOnCompleteListener(new OnCompleteListener<SignInMethodQueryResult>() {
-                                    @Override
-                                    public void onComplete(@NonNull Task<SignInMethodQueryResult> task) {
-                                        SignInMethodQueryResult result = task.getResult();
-                                        List<String> signInMethods = result.getSignInMethods();
-                                        if(signInMethods.contains(EmailAuthProvider.EMAIL_PASSWORD_SIGN_IN_METHOD)){
-                                            Log.d("aaaaaa", "tiene email");
-                                            verificaSiUsuarioValidado();
-                                        } else {
-                                            Log.d("aaaaaa", "o igual no");
-                                            Toast.makeText(CustomLoginActivity.this, "No hay ninguna cuenta vinculada con esta cuenta de Google", Toast.LENGTH_SHORT).show();
-                                            FirebaseAuth.getInstance().getCurrentUser().delete();
-                                        }
-                                    }
-                                });
-                            }
-                        }
-                    });
-        }
-    }
-
-    private void unificarCon(AuthCredential credential) {
-        auth.getCurrentUser().linkWithCredential(credential)
-                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>(){
+    final AuthCredential credential = GoogleAuthProvider.getCredential(
+            acct.getIdToken(), null);
+        final FirebaseAuth i = FirebaseAuth.getInstance();
+        i.signInWithCredential(credential)
+                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
-                        if (task.isSuccessful()) {
-                            verificaSiUsuarioValidado();
+                        if (!task.isSuccessful()) {
+                            Log.d(ValorGlobal.log, task.getException().toString());
+                            dialogo.dismiss();
+                            mensaje(task.getException().getLocalizedMessage());
                         } else {
-                            Log.w("aaaaaa", "Error en linkWithCredential",
-                                    task.getException());
-                            mensaje("Error al unificar cuentas.");
+                            //compruebo si ya existe una cuenta creada con email y pass. Si es así, puedo entrar
+                            i.fetchSignInMethodsForEmail(i.getCurrentUser().getEmail()).addOnCompleteListener(new OnCompleteListener<SignInMethodQueryResult>() {
+                                @Override
+                                public void onComplete(@NonNull Task<SignInMethodQueryResult> task) {
+                                    //----------------------------
+                                    List<? extends UserInfo> providerData = i.getCurrentUser().getProviderData();
+                                    for (UserInfo userInfo : providerData ) {
+                                        String providerId = userInfo.getProviderId();
+                                        Log.d("aaaaaaaaaa", "providerId = " + providerId);
+                                    }
+                                    //----------------------------
+                                    SignInMethodQueryResult result = task.getResult();
+                                    List<String> signInMethods = result.getSignInMethods();
+                                    if(signInMethods.contains(EmailAuthProvider.EMAIL_PASSWORD_SIGN_IN_METHOD) && i.getCurrentUser().isEmailVerified()){
+                                        //por defecto siempre linkeará al usuario si se detecta que se ha verificado el email
+                                        try{i.getCurrentUser().linkWithCredential(credential);} catch (Exception e) {}
+                                        abrirApp();
+                                    } else {
+                                        i.getCurrentUser().delete();
+                                        //si no es el caso, borro el usuario que se acaba de crear y salgo de la sesión de Google
+                                        AuthUI.getInstance().signOut(getApplicationContext()).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                            @Override
+                                            public void onComplete(@NonNull Task<Void> task) {
+                                                dialogo.dismiss();
+                                                mensaje("Ninguna cuenta vinculada");
+                                            }
+                                        });
+                                    }
+                                }
+                            });
                         }
                     }
                 });
+
     }
 }
