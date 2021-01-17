@@ -11,6 +11,16 @@ public class Vino {
     private String fecha;
     private int imagenId;
     private String tipo;
+
+    public int getComentarios() {
+        return comentarios;
+    }
+
+    public void setComentarios(int comentarios) {
+        this.comentarios = comentarios;
+    }
+
+    private int comentarios;
     public Vino(String nombre, float valoracion, String descripcion, String tipo, int imagenId) {
         this.nombre = nombre;
         this.valoracion = valoracion;
