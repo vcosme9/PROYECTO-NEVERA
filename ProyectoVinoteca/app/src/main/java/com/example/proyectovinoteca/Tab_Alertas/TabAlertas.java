@@ -9,14 +9,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-
-import androidx.annotation.NonNull;
-import androidx.core.app.NotificationCompat;
-import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
-
 import com.example.proyectovinoteca.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -29,9 +21,11 @@ import com.google.firebase.firestore.QuerySnapshot;
 import java.util.ArrayList;
 
 import androidx.annotation.NonNull;
+import androidx.core.app.NotificationCompat;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
 import static android.content.Context.NOTIFICATION_SERVICE;
 
 
@@ -74,6 +68,7 @@ public class TabAlertas extends Fragment {
         recyclerAlertas.setLayoutManager(new LinearLayoutManager(getContext()));
 
         loadDataFromFirestoreTemperatura();
+        loadDataFromFirestoreHumedad();
         // llenarlista();
 
         AlertasAdapter adapter = new AlertasAdapter(listaAlertas);
@@ -88,7 +83,6 @@ public class TabAlertas extends Fragment {
     }
 
 
-
     private void loadDataFromFirestoreTemperatura() {
 
         if (listaAlertas.size() > 0) {
@@ -99,12 +93,6 @@ public class TabAlertas extends Fragment {
         final CollectionReference medidasInfoTempMax = db.collection("ALERTAS").document("Rango_TempMax").collection("RangoMaximo");
         final CollectionReference medidasInfoTempMin = db.collection("ALERTAS").document("Rango_TempMin").collection("RangoMinimo");
         final CollectionReference medidasInfoTemp = db.collection("SENSORES").document("Sensor_Temperatura").collection("Temperatura");
-
-
-        final CollectionReference medidasInfoHumMax = db.collection("ALERTAS").document("Rango_TempMax").collection("RangoMaximo");
-        final CollectionReference medidasInfoHumMin = db.collection("ALERTAS").document("Rango_TempMin").collection("RangoMinimo");
-        final CollectionReference medidasInfoHum = db.collection("SENSORES").document("Sensor_Temperatura").collection("Temperatura");
-
 
         //coger la fecha mas nueva de TEMPERATURAS MAXIMAS
         medidasInfoTempMax.orderBy("Fecha", Query.Direction.DESCENDING)
@@ -214,6 +202,14 @@ public class TabAlertas extends Fragment {
                     }
                 });
 
+
+    }
+
+    public void loadDataFromFirestoreHumedad() {
+        final CollectionReference medidasInfoHumMax = db.collection("ALERTAS").document("Rango_HumMax").collection("RangoMaximo");
+        final CollectionReference medidasInfoHumMin = db.collection("ALERTAS").document("Rango_HumMin").collection("RangoMinimo");
+        final CollectionReference medidasInfoHum = db.collection("SENSORES").document("Sensor_Humedad").collection("Humedad");
+
         //coger la fecha mas nueva de HUMEDADES MAXIMAS
         medidasInfoHumMax.orderBy("Fecha", Query.Direction.DESCENDING)
                 .limit(1)
@@ -268,6 +264,7 @@ public class TabAlertas extends Fragment {
                         }
                     }
                 });
+
 
         //coger la fecha mas nueva de HUMEDADES MINIMAS
         medidasInfoHumMin.orderBy("Fecha", Query.Direction.DESCENDING)

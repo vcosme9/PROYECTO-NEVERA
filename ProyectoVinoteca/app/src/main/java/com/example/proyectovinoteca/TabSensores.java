@@ -132,7 +132,7 @@ public class TabSensores extends Fragment {
                 db.collection("ALERTAS").document("Rango_HumMax").collection("RangoMaximo").add(rangoMaxHum);
 
                 Map<String, Object> rangoMinHum = new HashMap<>();
-                rangoMinHum.put("Temperatura", rangeBarHum.getLeftPinValue());
+                rangoMinHum.put("Humedad", rangeBarHum.getLeftPinValue());
                 rangoMinHum.put("Fecha", fecha);
                 db.collection("ALERTAS").document("Rango_HumMin").collection("RangoMinimo").add(rangoMinHum);
             }
