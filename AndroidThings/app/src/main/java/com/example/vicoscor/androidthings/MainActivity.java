@@ -1,9 +1,13 @@
 package com.example.vicoscor.androidthings;
 
 import android.app.Activity;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.util.Log;
 
+import com.bilal.androidthingscameralib.InitializeCamera;
+import com.bilal.androidthingscameralib.OnPictureAvailableListener;
 import com.example.vicoscor.comun.Mqtt;
 import com.google.firebase.firestore.FirebaseFirestore;
 
@@ -21,17 +25,18 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
+
 import static com.example.vicoscor.comun.Mqtt.qos;
 import static com.example.vicoscor.comun.Mqtt.topicRoot;
 
-public class MainActivity extends Activity implements MqttCallback {
+public class MainActivity extends Activity implements MqttCallback, OnPictureAvailableListener {
 
     private static final String TAG = MainActivity.class.getSimpleName();
     public static MqttClient client = null;
     FirebaseFirestore db;
     String fecha;
     int health = 10;
-
+    private InitializeCamera mInitializeCamera;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -186,6 +191,10 @@ public class MainActivity extends Activity implements MqttCallback {
             sensorMagnetico.put("Magnetico", payload);
             sensorMagnetico.put("Fecha", fecha);
             db.collection("SENSORES").document("Sensor_Magnetico").collection("Magnetico").add(sensorMagnetico);
+            if(payload.equals("Puerta abierta")){
+                mInitializeCamera.captureImage();
+
+            }
         }
 
         if (topic.equals(topicRoot + "SensorID")) {
@@ -200,5 +209,14 @@ public class MainActivity extends Activity implements MqttCallback {
     @Override
     public void deliveryComplete(IMqttDeliveryToken token) {
         Log.d(Mqtt.TAG, "Entrega completa");
+    }
+
+    @Override
+    public void onPictureAvailable(byte[] imageBytes) {
+        Bitmap bmp= BitmapFactory.decodeByteArray(imageBytes,0,imageBytes.length);
+        Map<String, Object> foto = new HashMap<>();
+        foto.put("Foto", bmp);
+        foto.put("Fecha", fecha);
+        db.collection("CAMARA").document("Foto").collection("ID").add(foto);
     }
 }
