@@ -187,6 +187,14 @@ public class MainActivity extends Activity implements MqttCallback, OnPictureAva
 
         if (topic.equals(topicRoot + "SensorMagnetico")) {
             Log.d(Mqtt.TAG, "Recibiendo: " + topic + "->" + payload);
+
+            if(payload.equals("Puerta abierta")){
+                enviarValor("ON");
+            }
+            if(payload.equals("Puerta Cerrada")){
+                enviarValor("OFF");
+            }
+
             Map<String, Object> sensorMagnetico = new HashMap<>();
             sensorMagnetico.put("Magnetico", payload);
             sensorMagnetico.put("Fecha", fecha);
@@ -203,6 +211,17 @@ public class MainActivity extends Activity implements MqttCallback, OnPictureAva
             sensorID.put("Vino", payload);
             sensorID.put("Fecha", fecha);
             db.collection("SENSORES").document("Sensor_RFID").collection("ID").add(sensorID);
+        }
+    }
+
+    public void enviarValor(String valor){
+        try {
+            MqttMessage message = new MqttMessage(valor.getBytes());
+            message.setQos(Mqtt.qos);
+            message.setRetained(false);
+            client.publish(topicRoot+"cmnd/POWER", message);
+        } catch (MqttException e) {
+            Log.e(Mqtt.TAG, "Error al publicar.", e);
         }
     }
 

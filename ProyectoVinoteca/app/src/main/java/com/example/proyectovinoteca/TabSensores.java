@@ -1,7 +1,6 @@
 package com.example.proyectovinoteca;
 
 
-
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -12,10 +11,7 @@ import android.widget.CheckBox;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import androidx.fragment.app.Fragment;
-
 import com.appyvet.materialrangebar.RangeBar;
-import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -34,10 +30,13 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
+import androidx.fragment.app.Fragment;
+
 import static com.example.proyectovinoteca.Mqtt.topicRoot;
 
 public class TabSensores extends Fragment {
 
+    private String TAG = "TabSensores";
     public static MqttClient client = null;
     private FirebaseFirestore mDatabase;
 
@@ -46,6 +45,7 @@ public class TabSensores extends Fragment {
     LinearLayout containerRangoTem, containerRangoHum;
     TextView minValueTem, maxValueTem, minValueHum, maxValueHum;
     Button botonGuardarTemp;
+    Button botonGuardarHum;
     String fecha;
     FirebaseFirestore db;
 
@@ -53,6 +53,7 @@ public class TabSensores extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
     }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -71,6 +72,7 @@ public class TabSensores extends Fragment {
         minValueHum = v.findViewById(R.id.txt_humedad_minima);
         maxValueHum = v.findViewById(R.id.txt_humedad_maxima);
         botonGuardarTemp = v.findViewById(R.id.btn_guardar_temperatura);
+        botonGuardarHum = v.findViewById(R.id.btn_guardar_humedad);
 
         //ponemos los valores iniciales en los TextViews
         temperaturaActual.setText("18º");
@@ -104,14 +106,35 @@ public class TabSensores extends Fragment {
             }
         });
 
-        //funcionalidad al boton guardar
+        //funcionalidad al boton guardar Temperatura
         botonGuardarTemp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Map<String, Object> rangoMaxTemp = new HashMap<>();
                 rangoMaxTemp.put("Temperatura", rangeBarTem.getRightPinValue());
                 rangoMaxTemp.put("Fecha", fecha);
-                    db.collection("ALERTAS").document("Rango_TempMax").collection("RangoMaximo").add(rangoMaxTemp);
+                db.collection("ALERTAS").document("Rango_TempMax").collection("RangoMaximo").add(rangoMaxTemp);
+
+                Map<String, Object> rangoMinTemp = new HashMap<>();
+                rangoMinTemp.put("Temperatura", rangeBarTem.getLeftPinValue());
+                rangoMinTemp.put("Fecha", fecha);
+                db.collection("ALERTAS").document("Rango_TempMin").collection("RangoMinimo").add(rangoMinTemp);
+            }
+        });
+
+        //funcionalidad al boton guardar
+        botonGuardarHum.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Map<String, Object> rangoMaxHum = new HashMap<>();
+                rangoMaxHum.put("Humedad", rangeBarHum.getRightPinValue());
+                rangoMaxHum.put("Fecha", fecha);
+                db.collection("ALERTAS").document("Rango_HumMax").collection("RangoMaximo").add(rangoMaxHum);
+
+                Map<String, Object> rangoMinHum = new HashMap<>();
+                rangoMinHum.put("Temperatura", rangeBarHum.getLeftPinValue());
+                rangoMinHum.put("Fecha", fecha);
+                db.collection("ALERTAS").document("Rango_HumMin").collection("RangoMinimo").add(rangoMinHum);
             }
         });
 
@@ -152,12 +175,12 @@ public class TabSensores extends Fragment {
         });
 
         //muestra o esconde el rango dependiendo de si el checkbox está o no activado
-        if(checkBoxTem.isActivated()){
+        if (checkBoxTem.isActivated()) {
             containerRangoTem.setVisibility(View.VISIBLE);
         } else {
             containerRangoTem.setVisibility(View.GONE);
         }
-        if(checkBoxHum.isActivated()){
+        if (checkBoxHum.isActivated()) {
             containerRangoHum.setVisibility(View.VISIBLE);
         } else {
             containerRangoHum.setVisibility(View.GONE);
@@ -175,12 +198,12 @@ public class TabSensores extends Fragment {
         restar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                int valor = Integer.valueOf(temperaturaActual.getText().toString().replace("º",""));
-                if(valor == 24){
+                int valor = Integer.valueOf(temperaturaActual.getText().toString().replace("º", ""));
+                if (valor == 24) {
                     sumar.setBackgroundResource(R.drawable.boton_redondo_activado);
                 }
-                if(valor != 0) {
-                    if(valor == 1){
+                if (valor != 0) {
+                    if (valor == 1) {
                         restar.setBackgroundResource(R.drawable.boton_redondo_desactivado);
                     }
                     valor--;
@@ -191,12 +214,12 @@ public class TabSensores extends Fragment {
         sumar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                int valor = Integer.valueOf(temperaturaActual.getText().toString().replace("º",""));
-                if(valor == 0){
+                int valor = Integer.valueOf(temperaturaActual.getText().toString().replace("º", ""));
+                if (valor == 0) {
                     restar.setBackgroundResource(R.drawable.boton_redondo_activado);
                 }
-                if(valor != 24) {
-                    if(valor == 23){
+                if (valor != 24) {
+                    if (valor == 23) {
                         sumar.setBackgroundResource(R.drawable.boton_redondo_desactivado);
                     }
                     valor++;
@@ -207,7 +230,7 @@ public class TabSensores extends Fragment {
 
         //para la luz por mqtt
         FirebaseUser usuario = FirebaseAuth.getInstance().getCurrentUser();
-        String clientId = "user:"+usuario.getEmail();
+        String clientId = "user:" + usuario.getEmail();
         mDatabase = FirebaseFirestore.getInstance();
         try {
             Log.i(Mqtt.TAG, "Conectando al broker " + Mqtt.broker);
@@ -216,14 +239,19 @@ public class TabSensores extends Fragment {
             MqttConnectOptions connOpts = new MqttConnectOptions();
             connOpts.setCleanSession(true);
             connOpts.setKeepAliveInterval(60);
-            connOpts.setWill(topicRoot+"WillTopic", "App desconectada".getBytes(),Mqtt.qos, false);
+            connOpts.setWill(topicRoot + "WillTopic", "App desconectada".getBytes(), Mqtt.qos, false);
             client.connect(connOpts);
         } catch (MqttException e) {
             Log.e(Mqtt.TAG, "Error al conectar.", e);
         }
         try {
-            Log.i(Mqtt.TAG, "Suscrito a " + topicRoot+"cmnd/POWER");
-            client.subscribe(topicRoot+"cmnd/POWER", Mqtt.qos);
+
+            Log.i(Mqtt.TAG, "Suscrito a " + topicRoot + "cmnd/POWER");
+            client.subscribe(topicRoot + "cmnd/POWER", Mqtt.qos);
+
+            Log.i(Mqtt.TAG, "Suscrito a " + topicRoot + "#");
+            client.subscribe(topicRoot + "cmnd/POWER", Mqtt.qos);
+
             client.setCallback(new MqttCallbackExtended() {
                 @Override
                 public void connectComplete(boolean reconnect, String serverURI) {
@@ -233,13 +261,14 @@ public class TabSensores extends Fragment {
                 public void connectionLost(Throwable cause) {
                     Log.d(Mqtt.TAG, "Conexión perdida");
                 }
+
                 @Override
                 public void messageArrived(String topic, MqttMessage message) throws
                         Exception {
                     String payload = new String(message.getPayload());
                     Map<String, Object> documento = new HashMap<>();
 
-                    if(topic.equals(topicRoot + "cmnd/POWER")) {
+                    if (topic.equals(topicRoot + "cmnd/POWER")) {
                         documento.put("topic", "cmnd/POWER");
                         documento.put("value", payload);
                         documento.put("fecha (millis)", System.currentTimeMillis());
@@ -247,6 +276,7 @@ public class TabSensores extends Fragment {
                         mDatabase.collection("recibido").document().set(documento);
                     }
                 }
+
                 @Override
                 public void deliveryComplete(IMqttDeliveryToken token) {
                 }
@@ -258,39 +288,43 @@ public class TabSensores extends Fragment {
         return v;
     }
 
-    private void onCheckBoxClick(View v){
+    private void onCheckBoxClick(View v) {
         int id = v.getId();
-        switch (id){
+        switch (id) {
             case R.id.chk_activar_rango_temperatura:
-                if(((CheckBox)v).isChecked()){
+                if (((CheckBox) v).isChecked()) {
                     containerRangoTem.setVisibility(View.VISIBLE);
                 } else {
                     containerRangoTem.setVisibility(View.GONE);
                 }
                 break;
             case R.id.chk_activar_rango_humedad:
-                if(((CheckBox)v).isChecked()){
+                if (((CheckBox) v).isChecked()) {
                     containerRangoHum.setVisibility(View.VISIBLE);
                 } else {
                     containerRangoHum.setVisibility(View.GONE);
                 }
                 break;
             case R.id.chk_luz:
-                if(((CheckBox)v).isChecked()){
-                    enviarValor(v, "ON");
+
+                if (((CheckBox) v).isChecked()) {
+                    enviarValor("ON");
+
                 } else {
-                    enviarValor(v, "OFF");
+                    enviarValor("OFF");
                 }
                 break;
         }
     }
 
-    public void enviarValor(View view, String valor){
+
+    public void enviarValor(String valor) {
+
         try {
             MqttMessage message = new MqttMessage(valor.getBytes());
             message.setQos(Mqtt.qos);
             message.setRetained(false);
-            client.publish(topicRoot+"cmnd/POWER", message);
+            client.publish(topicRoot + "cmnd/POWER", message);
         } catch (MqttException e) {
             Log.e(Mqtt.TAG, "Error al publicar.", e);
         }
