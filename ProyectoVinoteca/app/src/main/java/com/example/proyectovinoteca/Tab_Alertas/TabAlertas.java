@@ -205,6 +205,7 @@ public class TabAlertas extends Fragment {
                                                     notificationManager.notify(NOTIFICACION_ID, notificacion.build());
                                                 }
                                             }
+<<<<<<< Updated upstream
                                             //el array pasa al adaptador
                                             AlertasAdapter adaptador = new AlertasAdapter(listaAlertas);
                                             recyclerAlertas.setAdapter(adaptador);
@@ -260,6 +261,8 @@ public class TabAlertas extends Fragment {
                                                     notificationManager.notify(NOTIFICACION_ID, notificacion.build());
                                                 }
                                             }
+=======
+>>>>>>> Stashed changes
                                             //el array pasa al adaptador
                                             AlertasAdapter adaptador = new AlertasAdapter(listaAlertas);
                                             recyclerAlertas.setAdapter(adaptador);
