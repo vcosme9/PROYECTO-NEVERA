@@ -11,25 +11,10 @@ import android.widget.CheckBox;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-<<<<<<< Updated upstream
 import com.appyvet.materialrangebar.RangeBar;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-=======
-import androidx.annotation.NonNull;
-import androidx.fragment.app.Fragment;
-
-import com.appyvet.materialrangebar.RangeBar;
-import com.example.proyectovinoteca.Tab_Alertas.AlertasAdapter;
-import com.example.proyectovinoteca.Tab_Alertas.ClaseAlerta;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.firestore.CollectionReference;
->>>>>>> Stashed changes
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.Query;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
-import com.google.firebase.firestore.QuerySnapshot;
 
 import org.eclipse.paho.client.mqttv3.IMqttDeliveryToken;
 import org.eclipse.paho.client.mqttv3.MqttCallbackExtended;
@@ -260,13 +245,13 @@ public class TabSensores extends Fragment {
             Log.e(Mqtt.TAG, "Error al conectar.", e);
         }
         try {
-<<<<<<< Updated upstream
+
             Log.i(Mqtt.TAG, "Suscrito a " + topicRoot + "cmnd/POWER");
             client.subscribe(topicRoot + "cmnd/POWER", Mqtt.qos);
-=======
-            Log.i(Mqtt.TAG, "Suscrito a " + topicRoot+"#");
-            client.subscribe(topicRoot+"cmnd/POWER", Mqtt.qos);
->>>>>>> Stashed changes
+
+            Log.i(Mqtt.TAG, "Suscrito a " + topicRoot + "#");
+            client.subscribe(topicRoot + "cmnd/POWER", Mqtt.qos);
+
             client.setCallback(new MqttCallbackExtended() {
                 @Override
                 public void connectComplete(boolean reconnect, String serverURI) {
@@ -321,25 +306,20 @@ public class TabSensores extends Fragment {
                 }
                 break;
             case R.id.chk_luz:
-<<<<<<< Updated upstream
+
                 if (((CheckBox) v).isChecked()) {
-                    enviarValor(v, "ON");
-=======
-                if(((CheckBox)v).isChecked()){
-                    enviarValor( "ON");
->>>>>>> Stashed changes
+                    enviarValor("ON");
+
                 } else {
-                    enviarValor( "OFF");
+                    enviarValor("OFF");
                 }
                 break;
         }
     }
 
-<<<<<<< Updated upstream
-    public void enviarValor(View view, String valor) {
-=======
-    public void enviarValor(String valor){
->>>>>>> Stashed changes
+
+    public void enviarValor(String valor) {
+
         try {
             MqttMessage message = new MqttMessage(valor.getBytes());
             message.setQos(Mqtt.qos);
