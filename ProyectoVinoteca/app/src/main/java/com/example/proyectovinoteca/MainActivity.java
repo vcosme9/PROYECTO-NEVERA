@@ -29,6 +29,7 @@ import com.android.volley.toolbox.NetworkImageView;
 import com.android.volley.toolbox.Volley;
 
 import com.example.proyectovinoteca.Tab_Guia.GuiaFragment;
+import com.example.proyectovinoteca.comentarios.ComentariosActivity;
 import com.firebase.ui.auth.AuthUI;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -220,5 +221,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             fotoUsuario.setImageResource(R.drawable.user_default);
         }
     }
+
+
 
 }
