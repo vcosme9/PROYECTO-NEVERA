@@ -58,9 +58,7 @@ public class ClasificacionesFragment extends Fragment {
     private Spinner spinner;
     private RadioButton rdVal;
     private RadioButton rdPop;
-    private LinearLayout chargeContainer;
-    private LinearLayout containerAll;
-    private RatingBar ratingBar;
+    private boolean valorando=false;
     public ClasificacionesFragment() {
     }
 
@@ -76,6 +74,7 @@ public class ClasificacionesFragment extends Fragment {
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.setAdapter(adaptador);
+
         final RadioGroup mRadioGroup = (RadioGroup) vista.findViewById(R.id.radioGroup);
         mRadioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
 
@@ -86,8 +85,7 @@ public class ClasificacionesFragment extends Fragment {
                 if (radioButton.getId() == R.id.radioPopular) {
                     orderPopular();
                 } else if (radioButton.getId() == R.id.radioValoracion) {
-                    orderValoracion(listaVinos);
-                    adaptador.notifyDataSetChanged();
+                    orderValoracion();
                 }
             }
         });
@@ -138,20 +136,38 @@ public class ClasificacionesFragment extends Fragment {
     }
 
 
-    public void orderName(ArrayList<Vino> listaVinos){
-        Collections.sort(listaVinos, new Comparator<Vino>() {
-            public int compare(Vino o1, Vino o2) {
-                return o1.getNombre().compareTo(o2.getNombre());
-            }
-        });
 
-    }
-    public void orderValoracion(ArrayList<Vino> listaVinos) {
-        Collections.sort(listaVinos, new Comparator<Vino>() {
-            public int compare(Vino o1, Vino o2) {
-                return Float.compare(o2.getValoracion(), o1.getValoracion());
-            }
-        });
+    public void orderValoracion() {
+        if (listaVinos.size() > 0) {
+            listaVinos.clear();
+        }
+        if (listaCopia.size() > 0) {
+            listaCopia.clear();
+        }
+        //referencia la coleccion de firebase
+        final CollectionReference medidasInfo = db.collection("coleccion").document("mis_vinos").collection("vinitos");
+
+        //coger la fecha mas nueva
+        medidasInfo.orderBy("valoracion", Query.Direction.DESCENDING)
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        for (QueryDocumentSnapshot documentSnapshot : task.getResult()) {
+
+                            Log.d(TAG, documentSnapshot.getId() + " => " + documentSnapshot.getData());
+
+                            //se guarda la nueva medida
+                            Vino miVino = new Vino(documentSnapshot.getString("nombre"), documentSnapshot.getDouble("valoracion").floatValue(),documentSnapshot.getString("descripcion"), documentSnapshot.getString("tipo"),  R.drawable.productos);
+                            listaVinos.add(miVino);
+                            adaptador.notifyDataSetChanged();
+                            //ocultar el contenedor de la imagen de carga y mostrar el contenido
+
+                        }
+                        recyclerView.setAdapter(adaptador);
+                    }
+                });
+
 
     }
     public void buscador(String text){
@@ -239,4 +255,5 @@ public class ClasificacionesFragment extends Fragment {
         spinner=  v.findViewById(R.id.tipo);
         spinner.setAdapter(spinnerAdapter);
     }
+
 }

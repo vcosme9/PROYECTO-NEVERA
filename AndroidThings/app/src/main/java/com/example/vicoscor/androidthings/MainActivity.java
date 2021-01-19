@@ -199,10 +199,9 @@ public class MainActivity extends Activity implements MqttCallback, OnPictureAva
             sensorMagnetico.put("Magnetico", payload);
             sensorMagnetico.put("Fecha", fecha);
             db.collection("SENSORES").document("Sensor_Magnetico").collection("Magnetico").add(sensorMagnetico);
-            if(payload.equals("Puerta abierta")){
-                mInitializeCamera.captureImage();
 
-            }
+            hacerFoto(payload);
+
         }
 
         if (topic.equals(topicRoot + "SensorID")) {
@@ -211,6 +210,13 @@ public class MainActivity extends Activity implements MqttCallback, OnPictureAva
             sensorID.put("Vino", payload);
             sensorID.put("Fecha", fecha);
             db.collection("SENSORES").document("Sensor_RFID").collection("ID").add(sensorID);
+        }
+    }
+
+    public void hacerFoto(String valor){
+        if(valor.equals("Puerta abierta")){
+            mInitializeCamera.captureImage();
+
         }
     }
 
