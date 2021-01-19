@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.RadioButton;
 import android.widget.RatingBar;
 import android.widget.TextView;
 
@@ -61,7 +62,6 @@ public class AdaptadorRanking extends
         View v = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.elemento_ranking, parent, false);
         v.setOnClickListener(onClickListener);
-
         return new ViewHolder(v);
     }
     // Usando como base el ViewHolder y lo personalizamos
