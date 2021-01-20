@@ -26,6 +26,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -115,7 +116,10 @@ public class AdaptadorRanking extends
         }
         public void personaliza(Vino vino){
             nombre.setText(vino.getNombre());
-            foto.setImageResource(vino.getImagenId());
+            Picasso.get()
+                    .load(vino.getFoto())
+                    .error(R.drawable.alerta)
+                    .into(foto);
             valoracion.setRating(vino.getValoracion());
         }
 

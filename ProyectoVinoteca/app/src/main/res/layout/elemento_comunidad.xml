@@ -1,0 +1,44 @@
+<LinearLayout
+    android:orientation="vertical"
+    android:id="@+id/container"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:padding="8dp">
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+        <ImageView
+            android:id="@+id/foto"
+            android:layout_width="140dp"
+            android:layout_height="140dp"
+            android:contentDescription="fotografía"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"/>
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_alignBottom="@+id/foto"
+            android:layout_alignRight="@+id/foto">
+            <TextView
+                android:layout_width="wrap_content"
+                android:id="@+id/valoracion"
+                android:textSize="16dp"
+                android:text="0.0"
+                android:layout_height="wrap_content"/>
+            <ImageView
+                android:layout_gravity="center"
+                android:layout_width="16dp"
+                android:layout_height="16dp"
+                android:background="@drawable/ic_custom_menu_star" />
+        </LinearLayout>
+    </RelativeLayout>
+    <TextView
+        android:id="@+id/nombre"
+        android:text="nombre"
+        android:layout_gravity="center"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+</LinearLayout>

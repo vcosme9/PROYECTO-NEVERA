@@ -5,12 +5,9 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class Vino {
-    private String nombre;
+    private String nombre, descripcion, fecha, tipo, foto;
     private float valoracion;
-    private String descripcion;
-    private String fecha;
     private int imagenId;
-    private String tipo;
 
     public int getComentarios() {
         return comentarios;
@@ -21,8 +18,9 @@ public class Vino {
     }
 
     private int comentarios;
-    public Vino(String nombre, float valoracion, String descripcion, String tipo, int imagenId) {
+    public Vino(String nombre, float valoracion, String descripcion, String tipo, int imagenId, String foto) {
         this.nombre = nombre;
+        this.foto = foto;
         this.valoracion = valoracion;
         this.descripcion = descripcion;
         this.tipo=tipo;
@@ -41,6 +39,14 @@ public class Vino {
         Date date = new Date();
         SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
         fecha=formatter.format(date);
+    }
+
+    public String getFoto() {
+        return foto;
+    }
+
+    public void setFoto(String foto) {
+        this.foto = foto;
     }
 
     public int getImagenId() {

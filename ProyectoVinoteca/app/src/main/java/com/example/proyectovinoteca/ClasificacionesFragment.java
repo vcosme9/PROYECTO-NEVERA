@@ -1,6 +1,8 @@
 package com.example.proyectovinoteca;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -16,9 +18,11 @@ import android.widget.RadioGroup;
 import android.widget.RatingBar;
 import android.widget.SearchView;
 import android.widget.Spinner;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -39,6 +43,7 @@ import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
+import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -125,8 +130,22 @@ public class ClasificacionesFragment extends Fragment {
         adaptador.setOnItemClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                int pos = recyclerView.getChildAdapterPosition(v);
-                Intent i=new Intent(getContext(), ComentariosActivity.class);
+                CardView cV = (CardView) ((LinearLayout)v).getChildAt(0);
+                TextView tV = (TextView)cV.getChildAt(1);
+                float fl = Float.valueOf(((RatingBar)cV.getChildAt(2)).getRating());
+                ImageView iV = (ImageView) cV.getChildAt(0);
+                Bitmap bm = ((BitmapDrawable) iV.getDrawable()).getBitmap();
+
+                //convertir bitmap en byte array
+                ByteArrayOutputStream stream = new ByteArrayOutputStream();
+                bm.compress(Bitmap.CompressFormat.PNG, 100, stream);
+                byte[] byteArray = stream.toByteArray();
+
+                String n = tV.getText().toString();
+                Intent i = new Intent(getContext(), ComentariosActivity.class);
+                i.putExtra("valoracion", fl);
+                i.putExtra("nombre", n);
+                i.putExtra("imagen", byteArray);
                 startActivity(i);
             }
         });
@@ -158,7 +177,7 @@ public class ClasificacionesFragment extends Fragment {
                             Log.d(TAG, documentSnapshot.getId() + " => " + documentSnapshot.getData());
 
                             //se guarda la nueva medida
-                            Vino miVino = new Vino(documentSnapshot.getString("nombre"), documentSnapshot.getDouble("valoracion").floatValue(),documentSnapshot.getString("descripcion"), documentSnapshot.getString("tipo"),  R.drawable.productos);
+                            Vino miVino = new Vino(documentSnapshot.getString("nombre"), documentSnapshot.getDouble("valoracion").floatValue(),documentSnapshot.getString("descripcion"), documentSnapshot.getString("tipo"),  R.drawable.productos, documentSnapshot.getString("foto"));
                             listaVinos.add(miVino);
                             adaptador.notifyDataSetChanged();
                             //ocultar el contenedor de la imagen de carga y mostrar el contenido
@@ -210,7 +229,7 @@ public class ClasificacionesFragment extends Fragment {
                             Log.d(TAG, documentSnapshot.getId() + " => " + documentSnapshot.getData());
 
                             //se guarda la nueva medida
-                            Vino miVino = new Vino(documentSnapshot.getString("nombre"), documentSnapshot.getDouble("valoracion").floatValue(),documentSnapshot.getString("descripcion"), documentSnapshot.getString("tipo"),  R.drawable.productos);
+                            Vino miVino = new Vino(documentSnapshot.getString("nombre"), documentSnapshot.getDouble("valoracion").floatValue(),documentSnapshot.getString("descripcion"), documentSnapshot.getString("tipo"),  R.drawable.productos, documentSnapshot.getString("foto"));
                             listaVinos.add(miVino);
                             adaptador.notifyDataSetChanged();
                             //ocultar el contenedor de la imagen de carga y mostrar el contenido
@@ -240,7 +259,7 @@ public class ClasificacionesFragment extends Fragment {
                             Log.d(TAG, documentSnapshot.getId() + " => " + documentSnapshot.getData());
 
                             //se guarda la nueva medida
-                            Vino miVino = new Vino(documentSnapshot.getString("nombre"), documentSnapshot.getDouble("valoracion").floatValue(),documentSnapshot.getString("descripcion"), documentSnapshot.getString("tipo"),  R.drawable.productos);
+                            Vino miVino = new Vino(documentSnapshot.getString("nombre"), documentSnapshot.getDouble("valoracion").floatValue(),documentSnapshot.getString("descripcion"), documentSnapshot.getString("tipo"),  R.drawable.productos, documentSnapshot.getString("foto"));
                             listaVinos.add(miVino);
                             adaptador.notifyDataSetChanged();
                             //ocultar el contenedor de la imagen de carga y mostrar el contenido

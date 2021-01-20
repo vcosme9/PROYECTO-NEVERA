@@ -2,12 +2,17 @@ package com.example.proyectovinoteca.comentarios;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.RatingBar;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -25,6 +30,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
@@ -41,6 +47,27 @@ public class ComentariosActivity extends Activity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.vino_comentarios);
+
+        RatingBar rB = findViewById(R.id.ratingBarVino);
+        TextView tv = findViewById(R.id.nombreVino);
+        ImageView iV = findViewById(R.id.imagenVino);
+
+        try {
+            float fl = getIntent().getFloatExtra("valoracion", 0);
+            String n = getIntent().getStringExtra("nombre");
+            byte[] byteArray = getIntent().getByteArrayExtra("imagen");
+            Bitmap bmp = BitmapFactory.decodeByteArray(byteArray, 0, byteArray.length);
+            rB.setRating(fl);
+            tv.setText(n);
+            iV.setImageBitmap(bmp);
+        } catch (Exception e){Log.d("Comentarios", e.toString());
+        Picasso.get()
+                .load("https://images-na.ssl-images-amazon.com/images/I/51%2Bt9dCLzCL._AC_SX679_.jpg")
+                .placeholder(R.drawable.ic_custom_launcher_2_background)
+                .error(R.drawable.alerta)
+                .into(iV);
+        }
+
         adaptador = new ComentariosAdapter(listaComentarios);
         loadDataFromFirestore();
         recyclerView =findViewById(R.id.comentariosrecycler);
