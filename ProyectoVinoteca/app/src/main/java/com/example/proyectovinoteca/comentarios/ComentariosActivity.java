@@ -46,11 +46,12 @@ public class ComentariosActivity extends Activity {
     private ComentariosAdapter adaptador;
     private Button nuevoComent;
     private  TextView tv;
+    private RatingBar rB;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.vino_comentarios);
-        final RatingBar rB = findViewById(R.id.ratingBarVino);
+        rB = findViewById(R.id.ratingBarVino);
         tv= findViewById(R.id.nombreVino);
         ImageView iV = findViewById(R.id.imagenVino);
 
@@ -117,8 +118,18 @@ public class ComentariosActivity extends Activity {
                             adaptador.notifyDataSetChanged();
                             //ocultar el contenedor de la imagen de carga y mostrar el contenido
                         }
+
+                        rB.setRating(procesarRat(listaComentarios));
                     }
                 });
+    }
+    float procesarRat(List<ClaseComentario>list){
+        float med=0;
+        for(int i = 0; i<list.size();i++){
+            med+=list.get(i).getValoracion();
+        }
+        med=med/list.size();
+        return med;
     }
 
 }
