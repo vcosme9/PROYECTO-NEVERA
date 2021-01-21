@@ -234,7 +234,7 @@ public class ClasificacionesFragment extends Fragment {
         final CollectionReference medidasInfo = db.collection("coleccion").document("mis_vinos").collection("vinitos");
 
         //coger la fecha mas nueva
-        medidasInfo.orderBy("nombre", Query.Direction.DESCENDING)
+        medidasInfo.orderBy("nombre", Query.Direction.ASCENDING)
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override

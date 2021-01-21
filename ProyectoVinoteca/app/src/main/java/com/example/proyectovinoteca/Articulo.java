@@ -33,6 +33,15 @@ public class Articulo {
         return nombre;
     }
 
+    @Override
+    public String toString() {
+        return "Articulo{" +
+                "nombre='" + nombre + '\'' +
+                ", foto='" + foto + '\'' +
+                ", valoracion=" + valoracion +
+                '}';
+    }
+
     public void setNombre(String nombre) {
         this.nombre = nombre;
     }

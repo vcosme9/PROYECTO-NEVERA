@@ -47,7 +47,7 @@ import androidx.annotation.Nullable;
 import static com.example.vicoscor.comun.Mqtt.qos;
 import static com.example.vicoscor.comun.Mqtt.topicRoot;
 
-public class MainActivity extends Activity implements MqttCallback, OnPictureAvailableListener {
+public class MainActivity extends Activity implements MqttCallback,OnPictureAvailableListener  {
 
     private StorageReference storageRef;
     private static final String TAG = MainActivity.class.getSimpleName();
@@ -269,15 +269,9 @@ public class MainActivity extends Activity implements MqttCallback, OnPictureAva
     public void onPictureAvailable(byte[] imageBytes) {
         final String referencia = "Foto/" + System.currentTimeMillis();
         final StorageReference ref = storageRef.child(referencia);
-        String s = null;
-        try {
-            s = new String(imageBytes, "UTF-8");
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        }
-        Uri uri = Uri.parse(s);
-        UploadTask uploadTask = ref.putFile(uri);
-        Task<Uri> urlTask = uploadTask.continueWithTask(
+
+        UploadTask uploadTask = ref.putBytes(imageBytes);
+        uploadTask.continueWithTask(
                 new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
                     @Override
                     public Task<Uri> then(
