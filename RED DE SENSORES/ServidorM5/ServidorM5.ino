@@ -108,23 +108,23 @@ void loop() {
       }
       if (compareArray(ActualUID, vino1, 7))
       {
-        ID = "Vino1"
+        ID = "Vino1";
       }
-      if (compareArray(ActualUID, vino2, 7))
+      else if (compareArray(ActualUID, vino2, 7))
       {
-        ID = "Vino2"
+        ID = "Vino2";
       }
-      if (compareArray(ActualUID, vino3, 7))
+      else if (compareArray(ActualUID, vino3, 7))
       {
-        ID = "Vino3"
+        ID = "Vino3";
       }
-      if (compareArray(ActualUID, vino4, 7))
+      else if (compareArray(ActualUID, vino4, 7))
       {
-        ID = "Vino4"
+        ID = "Vino4";
       }
-      if (compareArray(ActualUID, vino5, 7))
+      else if (compareArray(ActualUID, vino5, 7))
       {
-        ID = "Vino5"
+        ID = "Vino5";
       }
       // Terminamos la lectura de la tarjeta tarjeta  actual
       mfrc522.PICC_HaltA();
