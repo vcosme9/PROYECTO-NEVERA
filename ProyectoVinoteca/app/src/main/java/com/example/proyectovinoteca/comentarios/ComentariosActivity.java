@@ -86,9 +86,9 @@ public class ComentariosActivity extends Activity {
         if (listaComentarios.size() > 0) {
             listaComentarios.clear();
         }
-        String n = getIntent().getStringExtra("nombre");
+
         //referencia la coleccion de firebase
-        final CollectionReference comentarios = db.collection("coleccion").document("mis_vinos").collection("vinitos").document(n).collection("Comentarios");
+        final CollectionReference comentarios = db.collection("coleccion").document("mis_vinos").collection("vinitos").document("32").collection("Comentarios");
 
         //coger la fecha mas nueva
         comentarios.orderBy("fecha", Query.Direction.DESCENDING)

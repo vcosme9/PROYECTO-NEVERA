@@ -18,7 +18,6 @@ import android.widget.RatingBar;
 import android.widget.SearchView;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
@@ -90,7 +89,7 @@ public class CatalogoFragment extends Fragment {
             public void onCheckedChanged(RadioGroup group, int checkedId) {
                 int id = mRadioGroup.getCheckedRadioButtonId();
                 View radioButton = mRadioGroup.findViewById(id);
-                if (radioButton.getId() == R.id.radioPopular) {
+                if (radioButton.getId() == R.id.radioNombre) {
                     orderPopular();
                 } else if (radioButton.getId() == R.id.radioValoracion) {
                     orderValoracion();

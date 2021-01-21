@@ -14,6 +14,7 @@ public class Vino {
 
 
 
+
     public List<ClaseComentario> getComentarios() {
         return comentarios;
     }
@@ -33,7 +34,6 @@ public class Vino {
         Date date = new Date();
         SimpleDateFormat formatter = new SimpleDateFormat("MM-dd-yyyy HH:mm:ss");
         fecha=formatter.format(date);
-
     }
     public Vino(String nombre, float valoracion, String descripcion, String tipo, String foto, List<ClaseComentario> comentarios) {
         this.nombre = nombre;
@@ -46,6 +46,7 @@ public class Vino {
         fecha=formatter.format(date);
         this.comentarios=new ArrayList<>();
         this.comentarios=comentarios;
+
     }
     public Vino() {
         nombre="";

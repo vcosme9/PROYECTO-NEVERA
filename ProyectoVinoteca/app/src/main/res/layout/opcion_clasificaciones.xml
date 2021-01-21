@@ -56,12 +56,12 @@
                     android:text="Valoracion" />
 
                 <RadioButton
-                    android:id="@+id/radioPopular"
+                    android:id="@+id/radioNombre"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_margin="8dp"
                     android:layout_weight="1"
-                    android:text="Populares" />
+                    android:text="A - Z" />
 
             </RadioGroup>
 

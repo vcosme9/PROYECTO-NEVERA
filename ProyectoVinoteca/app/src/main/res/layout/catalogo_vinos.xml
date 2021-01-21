@@ -47,7 +47,7 @@
                     android:text="Valoracion" />
 
                 <RadioButton
-                    android:id="@+id/radioPopular"
+                    android:id="@+id/radioNombre"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_margin="8dp"
