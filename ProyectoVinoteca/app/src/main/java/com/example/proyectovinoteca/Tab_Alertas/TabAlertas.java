@@ -2,6 +2,8 @@ package com.example.proyectovinoteca.Tab_Alertas;
 
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
@@ -136,6 +138,9 @@ public class TabAlertas extends Fragment {
                                                     notificacion.setSmallIcon(R.mipmap.ic_launcher);
                                                     notificacion.setContentTitle("ALERTA");
                                                     notificacion.setContentText("Temperatura superior a lo establecido: " + temp);
+                                                    PendingIntent intencionPendiente = PendingIntent.getActivity(
+                                                            getContext(), 0, new Intent( getContext(), TabAlertas.class), 0);
+                                                    notificacion.setContentIntent(intencionPendiente);
                                                     notificationManager.notify(NOTIFICACION_ID, notificacion.build());
                                                 }
                                             }
@@ -190,6 +195,9 @@ public class TabAlertas extends Fragment {
                                                     notificacion.setSmallIcon(R.mipmap.ic_launcher);
                                                     notificacion.setContentTitle("ALERTA");
                                                     notificacion.setContentText("Temperatura inferior a lo establecido: " + temp);
+                                                    PendingIntent intencionPendiente = PendingIntent.getActivity(
+                                                            getContext(), 0, new Intent( getContext(), TabAlertas.class), 0);
+                                                    notificacion.setContentIntent(intencionPendiente);
                                                     notificationManager.notify(NOTIFICACION_ID, notificacion.build());
                                                 }
                                             }
@@ -253,6 +261,9 @@ public class TabAlertas extends Fragment {
                                                     notificacion.setSmallIcon(R.mipmap.ic_launcher);
                                                     notificacion.setContentTitle("ALERTA");
                                                     notificacion.setContentText("Humedad superior a lo establecido: " + hum);
+                                                    PendingIntent intencionPendiente = PendingIntent.getActivity(
+                                                            getContext(), 0, new Intent( getContext(), TabAlertas.class), 0);
+                                                    notificacion.setContentIntent(intencionPendiente);
                                                     notificationManager.notify(NOTIFICACION_ID, notificacion.build());
                                                 }
                                             }
@@ -309,6 +320,9 @@ public class TabAlertas extends Fragment {
                                                     notificacion.setSmallIcon(R.mipmap.ic_launcher);
                                                     notificacion.setContentTitle("ALERTA");
                                                     notificacion.setContentText("Humedad inferior a lo establecido: " + hum);
+                                                    PendingIntent intencionPendiente = PendingIntent.getActivity(
+                                                            getContext(), 0, new Intent( getContext(), TabAlertas.class), 0);
+                                                    notificacion.setContentIntent(intencionPendiente);
                                                     notificationManager.notify(NOTIFICACION_ID, notificacion.build());
                                                 }
                                             }
