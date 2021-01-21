@@ -3,13 +3,27 @@ package com.example.vicoscor.androidthings;
 import android.app.Activity;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 
 import com.bilal.androidthingscameralib.InitializeCamera;
 import com.bilal.androidthingscameralib.OnPictureAvailableListener;
 import com.example.vicoscor.comun.Mqtt;
+import com.google.android.gms.tasks.Continuation;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
 import org.eclipse.paho.client.mqttv3.IMqttDeliveryToken;
 import org.eclipse.paho.client.mqttv3.MqttCallback;
@@ -19,6 +33,7 @@ import org.eclipse.paho.client.mqttv3.MqttException;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
 import org.eclipse.paho.client.mqttv3.persist.MemoryPersistence;
 
+import java.io.UnsupportedEncodingException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
@@ -26,11 +41,15 @@ import java.util.Locale;
 import java.util.Map;
 
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+
 import static com.example.vicoscor.comun.Mqtt.qos;
 import static com.example.vicoscor.comun.Mqtt.topicRoot;
 
 public class MainActivity extends Activity implements MqttCallback, OnPictureAvailableListener {
 
+    private StorageReference storageRef;
     private static final String TAG = MainActivity.class.getSimpleName();
     public static MqttClient client = null;
     FirebaseFirestore db;
@@ -41,7 +60,9 @@ public class MainActivity extends Activity implements MqttCallback, OnPictureAva
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        
+
+        mInitializeCamera = new InitializeCamera(this, this, 640, 480, 1);
+
         SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm dd-MM-yyyy", Locale.getDefault());
         Date date = new Date();
         fecha = dateFormat.format(date);
@@ -50,6 +71,7 @@ public class MainActivity extends Activity implements MqttCallback, OnPictureAva
         ArduinoUart uart = new ArduinoUart("MINIUART", 115200);
 
         db = FirebaseFirestore.getInstance();
+        storageRef = FirebaseStorage.getInstance().getReference();
 /*
             //---RECIBIR SENSOR MAGNETICO POR UART
             Log.d(TAG, "Mandado a Arduino: M");
@@ -146,6 +168,19 @@ public class MainActivity extends Activity implements MqttCallback, OnPictureAva
         } catch (MqttException e) {
             Log.e(Mqtt.TAG, "Error al suscribir.", e);
         }
+        final CollectionReference docRef = db.collection("SENSORES").document("Sensor_Magnetico").collection("Magnetico");
+        docRef.orderBy("Fecha");
+        docRef.addSnapshotListener(new EventListener<QuerySnapshot>() {
+            @Override
+            public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
+                Log.d("aaaaaaaaaaaaaaaaa", "hola como estas");
+                if(value.getDocumentChanges().get(0).getDocument().get("Magnetico").toString().equals("Puerta abierta")){
+                    mInitializeCamera.captureImage();
+                    Log.d("aaaaaaaaaaaaaaaaa2", "puetas abiertrwsa");
+                }
+
+            }
+        });
     }
 
     @Override
@@ -156,6 +191,7 @@ public class MainActivity extends Activity implements MqttCallback, OnPictureAva
         } catch (MqttException e) {
             Log.e(Mqtt.TAG, "Error al desconectar.", e);
         }
+        mInitializeCamera.releaseCameraResources();
         super.onDestroy();
     }
 
@@ -200,7 +236,7 @@ public class MainActivity extends Activity implements MqttCallback, OnPictureAva
             sensorMagnetico.put("Fecha", fecha);
             db.collection("SENSORES").document("Sensor_Magnetico").collection("Magnetico").add(sensorMagnetico);
 
-            hacerFoto(payload);
+
 
         }
 
@@ -210,13 +246,6 @@ public class MainActivity extends Activity implements MqttCallback, OnPictureAva
             sensorID.put("Vino", payload);
             sensorID.put("Fecha", fecha);
             db.collection("SENSORES").document("Sensor_RFID").collection("ID").add(sensorID);
-        }
-    }
-
-    public void hacerFoto(String valor){
-        if(valor.equals("Puerta abierta")){
-            mInitializeCamera.captureImage();
-
         }
     }
 
@@ -238,10 +267,36 @@ public class MainActivity extends Activity implements MqttCallback, OnPictureAva
 
     @Override
     public void onPictureAvailable(byte[] imageBytes) {
-        Bitmap bmp= BitmapFactory.decodeByteArray(imageBytes,0,imageBytes.length);
-        Map<String, Object> foto = new HashMap<>();
-        foto.put("Foto", bmp);
-        foto.put("Fecha", fecha);
-        db.collection("CAMARA").document("Foto").collection("ID").add(foto);
+        final String referencia = "Foto/" + System.currentTimeMillis();
+        final StorageReference ref = storageRef.child(referencia);
+        String s = null;
+        try {
+            s = new String(imageBytes, "UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        Uri uri = Uri.parse(s);
+        UploadTask uploadTask = ref.putFile(uri);
+        Task<Uri> urlTask = uploadTask.continueWithTask(
+                new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
+                    @Override
+                    public Task<Uri> then(
+                            @NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
+                        if (!task.isSuccessful()) {
+                            throw task.getException();
+                        } else {
+                            FirebaseStorage.getInstance().getReference(referencia).getDownloadUrl().addOnCompleteListener(new OnCompleteListener<Uri>() {
+                                @Override
+                                public void onComplete(@NonNull Task<Uri> task) {
+                                    Map<String, Object> foto = new HashMap<>();
+                                    foto.put("Foto", task.getResult().toString());
+                                    foto.put("Fecha", fecha);
+                                    db.collection("CAMARA").add(foto);
+                                }
+                            });
+                        }
+                        return ref.getDownloadUrl();
+                    }
+                });
     }
 }
