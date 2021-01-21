@@ -33,6 +33,8 @@ import com.google.firebase.firestore.QuerySnapshot;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 import static android.content.ContentValues.TAG;
 
@@ -86,28 +88,43 @@ public class ComentariosActivity extends Activity {
         if (listaComentarios.size() > 0) {
             listaComentarios.clear();
         }
+        final Map<String, String> mapeo=new HashMap<>();
+        final CollectionReference vinos = db.collection("coleccion").document("mis_vinos").collection("vinitos");
 
-        //referencia la coleccion de firebase
-        final CollectionReference comentarios = db.collection("coleccion").document("mis_vinos").collection("vinitos").document("32").collection("Comentarios");
-
-        //coger la fecha mas nueva
-        comentarios.orderBy("fecha", Query.Direction.DESCENDING)
+        vinos.orderBy("valoracion", Query.Direction.DESCENDING)
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         for (QueryDocumentSnapshot documentSnapshot : task.getResult()) {
-
-                            Log.d(TAG, documentSnapshot.getId() + " => " + documentSnapshot.getData());
-
-                            //se guarda la nueva medida
-                            ClaseComentario Comentario = new ClaseComentario(documentSnapshot.getString("nombre"), documentSnapshot.getDouble("valoracion").floatValue(),documentSnapshot.getString("comentario"));
-                            listaComentarios.add(Comentario);
-                            adaptador.notifyDataSetChanged();
-                            //ocultar el contenedor de la imagen de carga y mostrar el contenido
+                            mapeo.put(documentSnapshot.getString("nombre"),documentSnapshot.getId());
                         }
+                         String id = mapeo.get(getIntent().getStringExtra("nombre"));
+                        //referencia la coleccion de firebase
+                        final CollectionReference comentarios = db.collection("coleccion").document("mis_vinos").collection("vinitos").document(id).collection("Comentarios");
+
+                        //coger la fecha mas nueva
+                        comentarios.orderBy("fecha", Query.Direction.DESCENDING)
+                                .get()
+                                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                        for (QueryDocumentSnapshot documentSnapshot : task.getResult()) {
+
+                                            Log.d(TAG, documentSnapshot.getId() + " => " + documentSnapshot.getData());
+
+
+                                            ClaseComentario Comentario = new ClaseComentario(documentSnapshot.getString("nombre"), documentSnapshot.getDouble("valoracion").floatValue(),documentSnapshot.getString("comentario"));
+                                            listaComentarios.add(Comentario);
+                                            adaptador.notifyDataSetChanged();
+                                            //ocultar el contenedor de la imagen de carga y mostrar el contenido
+                                        }
+                                    }
+                                });
                     }
                 });
+
+
     }
 
 }
