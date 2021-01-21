@@ -1,41 +1,58 @@
 package com.example.proyectovinoteca;
 
 
+import com.example.proyectovinoteca.comentarios.ClaseComentario;
+
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 public class Vino {
     private String nombre, descripcion, fecha, tipo, foto;
     private float valoracion;
-    private int imagenId;
 
-    public int getComentarios() {
+
+
+
+    public List<ClaseComentario> getComentarios() {
         return comentarios;
     }
 
-    public void setComentarios(int comentarios) {
+    public void setComentarios(List<ClaseComentario> comentarios) {
         this.comentarios = comentarios;
     }
 
-    private int comentarios;
-    public Vino(String nombre, float valoracion, String descripcion, String tipo, int imagenId, String foto) {
+    private List<ClaseComentario> comentarios;
+    public Vino(String nombre, float valoracion, String descripcion, String tipo,  String foto) {
         this.nombre = nombre;
         this.foto = foto;
         this.valoracion = valoracion;
         this.descripcion = descripcion;
         this.tipo=tipo;
-        this.imagenId=imagenId;
+
         Date date = new Date();
         SimpleDateFormat formatter = new SimpleDateFormat("MM-dd-yyyy HH:mm:ss");
         fecha=formatter.format(date);
     }
+    public Vino(String nombre, float valoracion, String descripcion, String tipo, String foto, List<ClaseComentario> comentarios) {
+        this.nombre = nombre;
+        this.foto = foto;
+        this.valoracion = valoracion;
+        this.descripcion = descripcion;
+        this.tipo=tipo;
+        Date date = new Date();
+        SimpleDateFormat formatter = new SimpleDateFormat("MM-dd-yyyy HH:mm:ss");
+        fecha=formatter.format(date);
+        this.comentarios=new ArrayList<>();
+        this.comentarios=comentarios;
 
+    }
     public Vino() {
         nombre="";
         valoracion=0;
         descripcion="";
         tipo="Tinto";
-        imagenId=R.drawable.productos;
         Date date = new Date();
         SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
         fecha=formatter.format(date);
@@ -49,13 +66,7 @@ public class Vino {
         this.foto = foto;
     }
 
-    public int getImagenId() {
-        return imagenId;
-    }
 
-    public void setImagenId(int imagenId) {
-        this.imagenId = imagenId;
-    }
 
     public String getNombre() {
         return nombre;

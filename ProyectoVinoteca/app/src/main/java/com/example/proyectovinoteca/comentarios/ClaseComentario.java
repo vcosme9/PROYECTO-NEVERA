@@ -52,4 +52,14 @@ public class ClaseComentario {
     public void setFecha(String fecha) {
         this.fecha = fecha;
     }
+
+    @Override
+    public String toString() {
+        return "ClaseComentario{" +
+                "nombre='" + nombre + '\'' +
+                ", valoracion=" + valoracion +
+                ", comentario='" + comentario + '\'' +
+                ", fecha='" + fecha + '\'' +
+                '}';
+    }
 }
