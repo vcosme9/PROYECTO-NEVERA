@@ -181,7 +181,7 @@ public class CatalogoFragment extends Fragment {
                             Log.d(TAG, documentSnapshot.getId() + " => " + documentSnapshot.getData());
 
                             //se guarda la nueva medida
-                            Vino miVino = new Vino(documentSnapshot.getString("nombre"), documentSnapshot.getDouble("valoracion").floatValue(),documentSnapshot.getString("descripcion"), documentSnapshot.getString("tipo"),  R.drawable.productos, documentSnapshot.getString("foto"));
+                            Vino miVino = new Vino(documentSnapshot.getString("nombre"), documentSnapshot.getDouble("valoracion").floatValue(),documentSnapshot.getString("descripcion"), documentSnapshot.getString("tipo"),  documentSnapshot.getString("foto"));
                             listaVinos.add(miVino);
                             adaptador.notifyDataSetChanged();
                             //ocultar el contenedor de la imagen de carga y mostrar el contenido
@@ -233,7 +233,7 @@ public class CatalogoFragment extends Fragment {
                             Log.d(TAG, documentSnapshot.getId() + " => " + documentSnapshot.getData());
 
                             //se guarda la nueva medida
-                            Vino miVino = new Vino(documentSnapshot.getString("nombre"), documentSnapshot.getDouble("valoracion").floatValue(),documentSnapshot.getString("descripcion"), documentSnapshot.getString("tipo"),  R.drawable.productos, documentSnapshot.getString("foto"));
+                            Vino miVino = new Vino(documentSnapshot.getString("nombre"), documentSnapshot.getDouble("valoracion").floatValue(),documentSnapshot.getString("descripcion"), documentSnapshot.getString("tipo"),  documentSnapshot.getString("foto"));
                             listaVinos.add(miVino);
                             adaptador.notifyDataSetChanged();
                             //ocultar el contenedor de la imagen de carga y mostrar el contenido
@@ -263,7 +263,7 @@ public class CatalogoFragment extends Fragment {
                             Log.d(TAG, documentSnapshot.getId() + " => " + documentSnapshot.getData());
 
                             //se guarda la nueva medida
-                            Vino miVino = new Vino(documentSnapshot.getString("nombre"), documentSnapshot.getDouble("valoracion").floatValue(),documentSnapshot.getString("descripcion"), documentSnapshot.getString("tipo"),  R.drawable.productos, documentSnapshot.getString("foto"));
+                            Vino miVino = new Vino(documentSnapshot.getString("nombre"), documentSnapshot.getDouble("valoracion").floatValue(),documentSnapshot.getString("descripcion"), documentSnapshot.getString("tipo"),  documentSnapshot.getString("foto"));
                             listaVinos.add(miVino);
                             adaptador.notifyDataSetChanged();
                             //ocultar el contenedor de la imagen de carga y mostrar el contenido

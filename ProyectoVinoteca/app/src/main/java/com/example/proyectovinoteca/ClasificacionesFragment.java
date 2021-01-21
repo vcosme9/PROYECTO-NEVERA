@@ -28,6 +28,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.example.proyectovinoteca.comentarios.ClaseComentario;
 import com.example.proyectovinoteca.comentarios.ComentariosActivity;
 import com.example.proyectovinoteca.comentarios.ComentariosActivity;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -174,11 +175,23 @@ public class ClasificacionesFragment extends Fragment {
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         for (QueryDocumentSnapshot documentSnapshot : task.getResult()) {
-
+                            final CollectionReference comentarios = db.collection("coleccion").document("mis_vinos").collection("vinitos").document(documentSnapshot.getString("nombre")).collection("Comentarios");
+                            final List<ClaseComentario>listaComentarios=new ArrayList<>();
+                            comentarios.orderBy("fecha", Query.Direction.DESCENDING)
+                                    .get()
+                                    .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                        @Override
+                                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                            for (QueryDocumentSnapshot coment:task.getResult()){
+                                                ClaseComentario miComentario= new ClaseComentario(coment.getString("nombre"),coment.getDouble("valoracion").floatValue(),coment.getString("comentario"));
+                                                listaComentarios.add(miComentario);
+                                            }
+                                        }
+                                    });
                             Log.d(TAG, documentSnapshot.getId() + " => " + documentSnapshot.getData());
 
                             //se guarda la nueva medida
-                            Vino miVino = new Vino(documentSnapshot.getString("nombre"), documentSnapshot.getDouble("valoracion").floatValue(),documentSnapshot.getString("descripcion"), documentSnapshot.getString("tipo"),  R.drawable.productos, documentSnapshot.getString("foto"));
+                            Vino miVino = new Vino(documentSnapshot.getString("nombre"), documentSnapshot.getDouble("valoracion").floatValue(),documentSnapshot.getString("descripcion"), documentSnapshot.getString("tipo"), documentSnapshot.getString("foto"), listaComentarios);
                             listaVinos.add(miVino);
                             adaptador.notifyDataSetChanged();
                             //ocultar el contenedor de la imagen de carga y mostrar el contenido
@@ -226,11 +239,23 @@ public class ClasificacionesFragment extends Fragment {
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         for (QueryDocumentSnapshot documentSnapshot : task.getResult()) {
-
+                            final CollectionReference comentarios = db.collection("coleccion").document("mis_vinos").collection("vinitos").document(documentSnapshot.getString("nombre")).collection("Comentarios");
+                            final List<ClaseComentario>listaComentarios=new ArrayList<>();
+                            comentarios.orderBy("fecha", Query.Direction.DESCENDING)
+                                    .get()
+                                    .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                        @Override
+                                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                            for (QueryDocumentSnapshot coment:task.getResult()){
+                                                ClaseComentario miComentario= new ClaseComentario(coment.getString("nombre"),coment.getDouble("valoracion").floatValue(),coment.getString("comentario"));
+                                                listaComentarios.add(miComentario);
+                                            }
+                                        }
+                                    });
                             Log.d(TAG, documentSnapshot.getId() + " => " + documentSnapshot.getData());
 
                             //se guarda la nueva medida
-                            Vino miVino = new Vino(documentSnapshot.getString("nombre"), documentSnapshot.getDouble("valoracion").floatValue(),documentSnapshot.getString("descripcion"), documentSnapshot.getString("tipo"),  R.drawable.productos, documentSnapshot.getString("foto"));
+                            Vino miVino = new Vino(documentSnapshot.getString("nombre"), documentSnapshot.getDouble("valoracion").floatValue(),documentSnapshot.getString("descripcion"), documentSnapshot.getString("tipo"), documentSnapshot.getString("foto"), listaComentarios);
                             listaVinos.add(miVino);
                             adaptador.notifyDataSetChanged();
                             //ocultar el contenedor de la imagen de carga y mostrar el contenido
@@ -240,34 +265,25 @@ public class ClasificacionesFragment extends Fragment {
                 });
     }
     private void orderPopular(){
-        if (listaVinos.size() > 0) {
-            listaVinos.clear();
-        }
-        if (listaCopia.size() > 0) {
-            listaCopia.clear();
-        }
-        //referencia la coleccion de firebase
-        final CollectionReference medidasInfo = db.collection("coleccion").document("mis_vinos").collection("vinitos");
+        Map<Integer, Vino> nComentarios = new HashMap<>();
+        for(int i=0;i<listaVinos.size();i++){
 
-        //coger la fecha mas nueva
-        medidasInfo.orderBy("comentarios", Query.Direction.DESCENDING)
-                .get()
-                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        for (QueryDocumentSnapshot documentSnapshot : task.getResult()) {
-
-                            Log.d(TAG, documentSnapshot.getId() + " => " + documentSnapshot.getData());
-
-                            //se guarda la nueva medida
-                            Vino miVino = new Vino(documentSnapshot.getString("nombre"), documentSnapshot.getDouble("valoracion").floatValue(),documentSnapshot.getString("descripcion"), documentSnapshot.getString("tipo"),  R.drawable.productos, documentSnapshot.getString("foto"));
-                            listaVinos.add(miVino);
-                            adaptador.notifyDataSetChanged();
-                            //ocultar el contenedor de la imagen de carga y mostrar el contenido
-
+            final CollectionReference comentarios = db.collection("coleccion").document("mis_vinos").collection("vinitos").document(listaVinos.get(i).getNombre()).collection("Comentarios");
+            final List<ClaseComentario>listaComentarios=new ArrayList<>();
+            comentarios.orderBy("fecha", Query.Direction.DESCENDING)
+                    .get()
+                    .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                        @Override
+                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                            for (QueryDocumentSnapshot coment:task.getResult()){
+                                ClaseComentario miComentario= new ClaseComentario(coment.getString("nombre"),coment.getDouble("valoracion").floatValue(),coment.getString("comentario"));
+                                listaComentarios.add(miComentario);
+                            }
                         }
-                    }
-                });
+                    });
+            nComentarios.put(new Integer(listaComentarios.size()),listaVinos.get(i));
+        }
+        
     }
 
     private void addItemsOnSpinner(View v) {
