@@ -24,9 +24,17 @@ String humedadAux = "";
 String ID = "";
 int id;
 String IDAux = "";
+byte ActualUID[7]; //almacenará el código del Tag leído
+byte vino1[7] = {0x04, 0x75, 0x47, 0x22, 0xEE, 0x64, 0x80} ; //--Vino1
+byte vino2[7] = {0x04, 0x79, 0x47, 0x22, 0xEE, 0x64, 0x80} ; //--Vino2
+byte vino3[7] = {0x04, 0x7D, 0x47, 0x22, 0xEE, 0x64, 0x80} ; //--Vino3
+byte vino4[7] = {0x04, 0x82, 0x47, 0x22, 0xEE, 0x64, 0x80} ; //--Vino4
+byte vino5[7] = {0x04, 0x85, 0x46, 0x22, 0xEE, 0x64, 0x80} ; //--Vino5
+
 const int RST_PIN = 5;          // Pin 9 para el reset del RC522
 const int SS_PIN = 21;            // Pin 21 para el SS (SDA) del RC522
 MFRC522 mfrc522(SS_PIN, RST_PIN);   // Crear instancia del MFRC522
+MFRC522::StatusCode status; //variable to get card status
 
 //--Clase magnetico
 ClaseMagnetico magn = ClaseMagnetico(2);
@@ -89,24 +97,36 @@ void loop() {
   //MEDIR SENSOR RFID
   boolean difID = false;
   IDAux = ID;
-  if (mfrc522.PICC_IsNewCardPresent())
+  if ( mfrc522.PICC_IsNewCardPresent())
   {
-    if (mfrc522.PICC_ReadCardSerial())
+    //Seleccionamos una tarjeta
+    if ( mfrc522.PICC_ReadCardSerial())
     {
-      id = 0;
-      printArray(mfrc522.uid.uidByte, mfrc522.uid.size);
-      if (id == 715) {
-        ID = "Vino Rosado";
+      // Enviamos serialemente su UI
+      for (byte i = 0; i < mfrc522.uid.size; i++) {
+        ActualUID[i] = mfrc522.uid.uidByte[i];
       }
-      if (id == 719) {
-        ID = "Vino Blanco";
+      if (compareArray(ActualUID, vino1, 7))
+      {
+        ID = "Vino1"
       }
-      if (id == 723) {
-        ID = "Vino Tinto";
+      if (compareArray(ActualUID, vino2, 7))
+      {
+        ID = "Vino2"
       }
-      if (id == 727) {
-        ID = "Cava";
+      if (compareArray(ActualUID, vino3, 7))
+      {
+        ID = "Vino3"
       }
+      if (compareArray(ActualUID, vino4, 7))
+      {
+        ID = "Vino4"
+      }
+      if (compareArray(ActualUID, vino5, 7))
+      {
+        ID = "Vino5"
+      }
+      // Terminamos la lectura de la tarjeta tarjeta  actual
       mfrc522.PICC_HaltA();
     }
   }
@@ -208,12 +228,12 @@ void loop() {
     }
   }
 }
-//--Funciones
-void printArray(byte *buffer, byte bufferSize) {
-  for (byte i = 0; i < bufferSize; i++) {
-    id = id + buffer[i];
+//-----------compare array
+boolean compareArray(byte array1[], byte array2[], int n_byte)
+{
+  for (int i = 0; i < n_byte; i++)
+  {
+    if (array1[i] != array2[i])return (false);
   }
+  return (true);
 }
-
-
-
