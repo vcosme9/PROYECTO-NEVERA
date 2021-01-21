@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.example.proyectovinoteca.MainActivity;
 import com.example.proyectovinoteca.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -126,6 +127,7 @@ public class TabAlertas extends Fragment {
                                                     //se envia una notificacion
                                                     notificationManager = (NotificationManager)
                                                             getActivity().getSystemService(NOTIFICATION_SERVICE);
+
                                                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                                                         NotificationChannel notificationChannel = new NotificationChannel(
                                                                 CANAL_ID, "Mis Notificaciones",

@@ -11,6 +11,10 @@ import java.util.List;
 public class Vino {
     private String nombre, descripcion, fecha, tipo, foto;
     private float valoracion;
+<<<<<<< Updated upstream
+=======
+    private int imagenId;
+>>>>>>> Stashed changes
 
 
 
@@ -23,8 +27,13 @@ public class Vino {
         this.comentarios = comentarios;
     }
 
+<<<<<<< Updated upstream
     private List<ClaseComentario> comentarios;
     public Vino(String nombre, float valoracion, String descripcion, String tipo,  String foto) {
+=======
+    private int comentarios;
+    public Vino(String nombre, float valoracion, String descripcion, String tipo, int imagenId, String foto) {
+>>>>>>> Stashed changes
         this.nombre = nombre;
         this.foto = foto;
         this.valoracion = valoracion;
@@ -60,6 +69,17 @@ public class Vino {
 
     public String getFoto() {
         return foto;
+<<<<<<< Updated upstream
+=======
+    }
+
+    public void setFoto(String foto) {
+        this.foto = foto;
+    }
+
+    public int getImagenId() {
+        return imagenId;
+>>>>>>> Stashed changes
     }
 
     public void setFoto(String foto) {

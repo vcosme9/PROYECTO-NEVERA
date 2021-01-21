@@ -136,6 +136,7 @@ public class ClasificacionesFragment extends Fragment {
                 TextView tV = (TextView)cV.getChildAt(1);
                 float fl = Float.valueOf(((RatingBar)cV.getChildAt(2)).getRating());
                 ImageView iV = (ImageView) cV.getChildAt(0);
+<<<<<<< Updated upstream
 
                 Intent i = new Intent(getContext(), ComentariosActivity.class);
                 //convertir bitmap en byte array
@@ -149,6 +150,20 @@ public class ClasificacionesFragment extends Fragment {
                 String n = tV.getText().toString();
                 i.putExtra("valoracion", fl);
                 i.putExtra("nombre", n);
+=======
+                Bitmap bm = ((BitmapDrawable) iV.getDrawable()).getBitmap();
+
+                //convertir bitmap en byte array
+                ByteArrayOutputStream stream = new ByteArrayOutputStream();
+                bm.compress(Bitmap.CompressFormat.PNG, 100, stream);
+                byte[] byteArray = stream.toByteArray();
+
+                String n = tV.getText().toString();
+                Intent i = new Intent(getContext(), ComentariosActivity.class);
+                i.putExtra("valoracion", fl);
+                i.putExtra("nombre", n);
+                i.putExtra("imagen", byteArray);
+>>>>>>> Stashed changes
                 startActivity(i);
             }
         });
@@ -192,7 +207,11 @@ public class ClasificacionesFragment extends Fragment {
                             Log.d(TAG, documentSnapshot.getId() + " => " + documentSnapshot.getData());
 
                             //se guarda la nueva medida
+<<<<<<< Updated upstream
                             Vino miVino = new Vino(documentSnapshot.getString("nombre"), documentSnapshot.getDouble("valoracion").floatValue(),documentSnapshot.getString("descripcion"), documentSnapshot.getString("tipo"), documentSnapshot.getString("foto"), listaComentarios);
+=======
+                            Vino miVino = new Vino(documentSnapshot.getString("nombre"), documentSnapshot.getDouble("valoracion").floatValue(),documentSnapshot.getString("descripcion"), documentSnapshot.getString("tipo"),  R.drawable.productos, documentSnapshot.getString("foto"));
+>>>>>>> Stashed changes
                             listaVinos.add(miVino);
                             adaptador.notifyDataSetChanged();
                             //ocultar el contenedor de la imagen de carga y mostrar el contenido
@@ -237,7 +256,11 @@ public class ClasificacionesFragment extends Fragment {
                             Log.d(TAG, documentSnapshot.getId() + " => " + documentSnapshot.getData());
 
                             //se guarda la nueva medida
+<<<<<<< Updated upstream
                             Vino miVino = new Vino(documentSnapshot.getString("nombre"), documentSnapshot.getDouble("valoracion").floatValue(),documentSnapshot.getString("descripcion"), documentSnapshot.getString("tipo"), documentSnapshot.getString("foto"), listaComentarios);
+=======
+                            Vino miVino = new Vino(documentSnapshot.getString("nombre"), documentSnapshot.getDouble("valoracion").floatValue(),documentSnapshot.getString("descripcion"), documentSnapshot.getString("tipo"),  R.drawable.productos, documentSnapshot.getString("foto"));
+>>>>>>> Stashed changes
                             listaVinos.add(miVino);
                             adaptador.notifyDataSetChanged();
                             //ocultar el contenedor de la imagen de carga y mostrar el contenido
@@ -301,7 +324,11 @@ public class ClasificacionesFragment extends Fragment {
                             Log.d(TAG, documentSnapshot.getId() + " => " + documentSnapshot.getData());
 
                             //se guarda la nueva medida
+<<<<<<< Updated upstream
                             Vino miVino = new Vino(documentSnapshot.getString("nombre"), documentSnapshot.getDouble("valoracion").floatValue(),documentSnapshot.getString("descripcion"), documentSnapshot.getString("tipo"), documentSnapshot.getString("foto"), listaComentarios);
+=======
+                            Vino miVino = new Vino(documentSnapshot.getString("nombre"), documentSnapshot.getDouble("valoracion").floatValue(),documentSnapshot.getString("descripcion"), documentSnapshot.getString("tipo"),  R.drawable.productos, documentSnapshot.getString("foto"));
+>>>>>>> Stashed changes
                             listaVinos.add(miVino);
                             adaptador.notifyDataSetChanged();
                             //ocultar el contenedor de la imagen de carga y mostrar el contenido
