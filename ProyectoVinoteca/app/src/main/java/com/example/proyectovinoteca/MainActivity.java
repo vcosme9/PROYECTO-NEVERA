@@ -28,7 +28,6 @@ import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.NetworkImageView;
 import com.android.volley.toolbox.Volley;
 
-import com.example.proyectovinoteca.FragmentCamara.CamaraFragment;
 import com.example.proyectovinoteca.Tab_Guia.GuiaFragment;
 import com.example.proyectovinoteca.comentarios.ComentariosActivity;
 import com.firebase.ui.auth.AuthUI;
@@ -181,9 +180,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 break;
             case R.id.op5:
                 fragmentTransaction.replace(R.id.container, new GuiaFragment());
-                break;
-            case R.id.op6:
-                fragmentTransaction.replace(R.id.container, new CamaraFragment());
                 break;
             case R.id.other1:
                 fragmentTransaction.replace(R.id.container, new AyudaFragment());

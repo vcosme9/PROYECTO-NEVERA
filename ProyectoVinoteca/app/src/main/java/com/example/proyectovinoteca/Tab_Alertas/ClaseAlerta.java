@@ -34,13 +34,4 @@ public class ClaseAlerta {
     public void setImagenId(int imagenId) {
         this.imagenId = imagenId;
     }
-
-    @Override
-    public String toString() {
-        return "ClaseAlerta{" +
-                "nombre='" + nombre + '\'' +
-                ", info='" + info + '\'' +
-                ", imagenId=" + imagenId +
-                '}';
-    }
 }

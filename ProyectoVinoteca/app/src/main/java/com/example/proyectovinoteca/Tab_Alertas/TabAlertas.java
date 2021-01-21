@@ -72,7 +72,6 @@ public class TabAlertas extends Fragment {
 
         loadDataFromFirestoreTemperatura();
         loadDataFromFirestoreHumedad();
-
         // llenarlista();
 
         AlertasAdapter adapter = new AlertasAdapter(listaAlertas);
@@ -338,6 +337,4 @@ public class TabAlertas extends Fragment {
                     }
                 });
     }
-
-
 }
