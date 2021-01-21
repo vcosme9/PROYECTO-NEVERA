@@ -1,9 +1,6 @@
 package com.example.proyectovinoteca;
 
-<<<<<<< Updated upstream
 import android.app.Activity;
-=======
->>>>>>> Stashed changes
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -25,11 +22,8 @@ import android.widget.Toast;
 import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-<<<<<<< Updated upstream
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
-=======
->>>>>>> Stashed changes
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -67,7 +61,6 @@ public class FavoritosFragment extends Fragment {
     private final ArrayList<Articulo> listaArticulos = new ArrayList<>();
     private RecyclerView recyclerView, rV2, rV3;
     public AdaptadorComunidad adaptador;
-<<<<<<< Updated upstream
     private String filtro = "nombre";
 
     @Override
@@ -89,13 +82,6 @@ public class FavoritosFragment extends Fragment {
                 fragmentTransaction.commit();
             }
         });
-=======
-
-    @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle bundle) {
-        View v = inflater.inflate(R.layout.opcion_favoritos, container, false);
-
->>>>>>> Stashed changes
         fG = new FuncionGlobal(getContext());
         vG = v.findViewById(R.id.contenedor);
         fG.contenedor = vG;
@@ -141,10 +127,7 @@ public class FavoritosFragment extends Fragment {
                 startActivity(i);
             }
         });
-<<<<<<< Updated upstream
 
-=======
->>>>>>> Stashed changes
         return v;
     }
 
