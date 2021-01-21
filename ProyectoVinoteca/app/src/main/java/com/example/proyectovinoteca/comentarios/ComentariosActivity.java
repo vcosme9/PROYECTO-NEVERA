@@ -34,6 +34,7 @@ import com.google.firebase.firestore.QuerySnapshot;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import static android.content.ContentValues.TAG;
 
@@ -44,18 +45,21 @@ public class ComentariosActivity extends Activity {
     private final FirebaseFirestore db = FirebaseFirestore.getInstance();
     private ComentariosAdapter adaptador;
     private Button nuevoComent;
+    private  TextView tv;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.vino_comentarios);
-        RatingBar rB = findViewById(R.id.ratingBarVino);
-        TextView tv = findViewById(R.id.nombreVino);
+        final RatingBar rB = findViewById(R.id.ratingBarVino);
+        tv= findViewById(R.id.nombreVino);
         ImageView iV = findViewById(R.id.imagenVino);
+
         nuevoComent = findViewById(R.id.comentBtn);
         nuevoComent.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent i = new Intent(getApplicationContext(), RatingComentarioActivity.class);
+                i.putExtra("nombre",tv.getText().toString());
                 startActivity(i);
             }
         });
@@ -93,9 +97,9 @@ public class ComentariosActivity extends Activity {
         if (listaComentarios.size() > 0) {
             listaComentarios.clear();
         }
-
+        Log.d("EEEEEEEEEEEEEEEEEEEE", tv.getText().toString());
         //referencia la coleccion de firebase
-        final CollectionReference comentarios = db.collection("coleccion").document("mis_vinos").collection("vinitos").document("32").collection("Comentarios");
+        final CollectionReference comentarios = db.collection("coleccion").document("mis_vinos").collection("vinitos").document(tv.getText().toString()).collection("Comentarios");
 
         //coger la fecha mas nueva
         comentarios.orderBy("fecha", Query.Direction.DESCENDING)
