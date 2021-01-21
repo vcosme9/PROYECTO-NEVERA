@@ -33,8 +33,6 @@ import com.google.firebase.firestore.QuerySnapshot;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
 
 import static android.content.ContentValues.TAG;
 
@@ -63,11 +61,11 @@ public class ComentariosActivity extends Activity {
             tv.setText(n);
             iV.setImageBitmap(bmp);
         } catch (Exception e){Log.d("Comentarios", e.toString());
-            Picasso.get()
-                    .load("https://resources.sears.com.mx/medios-plazavip/fotos/productos_sears1/original/2991799.jpg")
-                    .placeholder(R.drawable.ic_custom_launcher_2_background)
-                    .error(R.drawable.alerta)
-                    .into(iV);
+        Picasso.get()
+                .load("https://resources.sears.com.mx/medios-plazavip/fotos/productos_sears1/original/2991799.jpg")
+                .placeholder(R.drawable.ic_custom_launcher_2_background)
+                .error(R.drawable.alerta)
+                .into(iV);
         }
 
         adaptador = new ComentariosAdapter(listaComentarios);
@@ -83,53 +81,33 @@ public class ComentariosActivity extends Activity {
         startActivity(a);
     }
 
-    public void ratingComentario(View view){
-        Intent a= new Intent(this, RatingComentarioActivity.class);
-        startActivity(a);
-    }
-
     private void loadDataFromFirestore() {
 
         if (listaComentarios.size() > 0) {
             listaComentarios.clear();
         }
-        final Map<String, String> mapeo=new HashMap<>();
-        final CollectionReference vinos = db.collection("coleccion").document("mis_vinos").collection("vinitos");
 
-        vinos.orderBy("valoracion", Query.Direction.DESCENDING)
+        //referencia la coleccion de firebase
+        final CollectionReference comentarios = db.collection("coleccion").document("mis_vinos").collection("vinitos").document("32").collection("Comentarios");
+
+        //coger la fecha mas nueva
+        comentarios.orderBy("fecha", Query.Direction.DESCENDING)
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         for (QueryDocumentSnapshot documentSnapshot : task.getResult()) {
-                            mapeo.put(documentSnapshot.getString("nombre"),documentSnapshot.getId());
+
+                            Log.d(TAG, documentSnapshot.getId() + " => " + documentSnapshot.getData());
+
+                            //se guarda la nueva medida
+                            ClaseComentario Comentario = new ClaseComentario(documentSnapshot.getString("nombre"), documentSnapshot.getDouble("valoracion").floatValue(),documentSnapshot.getString("comentario"));
+                            listaComentarios.add(Comentario);
+                            adaptador.notifyDataSetChanged();
+                            //ocultar el contenedor de la imagen de carga y mostrar el contenido
                         }
-                        String id = mapeo.get(getIntent().getStringExtra("nombre"));
-                        //referencia la coleccion de firebase
-                        final CollectionReference comentarios = db.collection("coleccion").document("mis_vinos").collection("vinitos").document(id).collection("Comentarios");
-
-                        //coger la fecha mas nueva
-                        comentarios.orderBy("fecha", Query.Direction.DESCENDING)
-                                .get()
-                                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                                    @Override
-                                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                                        for (QueryDocumentSnapshot documentSnapshot : task.getResult()) {
-
-                                            Log.d(TAG, documentSnapshot.getId() + " => " + documentSnapshot.getData());
-
-
-                                            ClaseComentario Comentario = new ClaseComentario(documentSnapshot.getString("nombre"), documentSnapshot.getDouble("valoracion").floatValue(),documentSnapshot.getString("comentario"));
-                                            listaComentarios.add(Comentario);
-                                            adaptador.notifyDataSetChanged();
-                                            //ocultar el contenedor de la imagen de carga y mostrar el contenido
-                                        }
-                                    }
-                                });
                     }
                 });
-
-
     }
 
 }
