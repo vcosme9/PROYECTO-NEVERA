@@ -1,5 +1,6 @@
 package com.example.proyectovinoteca;
 
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -18,8 +19,11 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -57,11 +61,27 @@ public class FavoritosFragment extends Fragment {
     private final ArrayList<Articulo> listaArticulos = new ArrayList<>();
     private RecyclerView recyclerView, rV2, rV3;
     public AdaptadorComunidad adaptador;
+    private String filtro = "nombre";
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle bundle) {
-        View v = inflater.inflate(R.layout.opcion_favoritos, container, false);
 
+        View v = inflater.inflate(R.layout.opcion_favoritos, container, false);
+        Button b = v.findViewById(R.id.btn_ver_mas_1);
+        b.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Fragment fragment = new CatalogoFragment();
+                Bundle args = new Bundle();
+                filtro = "valoracion";
+                args.putString("filtro", filtro);
+                fragment.setArguments(args);
+                FragmentManager fragmentManager = getFragmentManager();
+                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                fragmentTransaction.replace(R.id.container, fragment);
+                fragmentTransaction.commit();
+            }
+        });
         fG = new FuncionGlobal(getContext());
         vG = v.findViewById(R.id.contenedor);
         fG.contenedor = vG;
@@ -107,6 +127,7 @@ public class FavoritosFragment extends Fragment {
                 startActivity(i);
             }
         });
+
         return v;
     }
 

@@ -10,7 +10,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
@@ -19,42 +18,32 @@ import android.widget.RatingBar;
 import android.widget.SearchView;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.bumptech.glide.Glide;
-import com.example.proyectovinoteca.comentarios.ComentariosActivity;
 import com.example.proyectovinoteca.comentarios.ComentariosActivity;
 import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 import static android.content.ContentValues.TAG;
 
-public class ClasificacionesFragment extends Fragment {
+public class CatalogoFragment extends Fragment {
     private RecyclerView recyclerView;
     private final ArrayList<Vino> listaVinos = new ArrayList<>();
     private final ArrayList<Vino> listaCopia = new ArrayList<>();
@@ -64,14 +53,28 @@ public class ClasificacionesFragment extends Fragment {
     private RadioButton rdVal;
     private RadioButton rdPop;
     private boolean valorando=false;
-    public ClasificacionesFragment() {
-    }
+    private FragmentManager fragmentManager;
+    private FragmentTransaction fragmentTransaction;
+    private String filtro = "nombre";
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle bundle){
 
+        View vista=inflater.inflate(R.layout.catalogo_vinos, container, false);
+        Bundle b = getArguments();
+        filtro = getArguments() != null ? getArguments().getString("filtro") : "nombre";
+        // This callback will only be called when MyFragment is at least Started.
+        OnBackPressedCallback callback = new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                fragmentManager = getFragmentManager();
+                fragmentTransaction = fragmentManager.beginTransaction();
+                fragmentTransaction.replace(R.id.container, new FavoritosFragment());
+                fragmentTransaction.commit();
+            }
+        };
+        requireActivity().getOnBackPressedDispatcher().addCallback(this, callback);
 
-        View vista=inflater.inflate(R.layout.opcion_clasificaciones, container, false);
         adaptador = new AdaptadorRanking(listaVinos);
         loadDataFromFirestore();
         listaCopia.addAll(listaVinos);
@@ -220,7 +223,7 @@ public class ClasificacionesFragment extends Fragment {
         final CollectionReference medidasInfo = db.collection("coleccion").document("mis_vinos").collection("vinitos");
 
         //coger la fecha mas nueva
-        medidasInfo.orderBy("nombre", Query.Direction.DESCENDING)
+        medidasInfo.orderBy(filtro, Query.Direction.DESCENDING)
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override

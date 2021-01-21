@@ -48,8 +48,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private static NetworkImageView fotoUsuario;
     private static FirebaseUser usuario;
 
-    FragmentManager fragmentManager;
-    FragmentTransaction fragmentTransaction;
+    private FragmentManager fragmentManager;
+    private FragmentTransaction fragmentTransaction;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -221,7 +221,5 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             fotoUsuario.setImageResource(R.drawable.user_default);
         }
     }
-
-
 
 }

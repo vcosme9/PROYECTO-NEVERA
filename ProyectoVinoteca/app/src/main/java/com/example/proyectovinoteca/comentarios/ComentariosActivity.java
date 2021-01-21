@@ -62,7 +62,7 @@ public class ComentariosActivity extends Activity {
             iV.setImageBitmap(bmp);
         } catch (Exception e){Log.d("Comentarios", e.toString());
         Picasso.get()
-                .load("https://images-na.ssl-images-amazon.com/images/I/51%2Bt9dCLzCL._AC_SX679_.jpg")
+                .load("https://resources.sears.com.mx/medios-plazavip/fotos/productos_sears1/original/2991799.jpg")
                 .placeholder(R.drawable.ic_custom_launcher_2_background)
                 .error(R.drawable.alerta)
                 .into(iV);
