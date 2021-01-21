@@ -34,12 +34,13 @@ import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import static android.content.ContentValues.TAG;
 
 public class ComentariosActivity extends Activity {
-
+    private RatingBar rB;
     private RecyclerView recyclerView;
     private final ArrayList<ClaseComentario> listaComentarios = new ArrayList<>();
     private final FirebaseFirestore db = FirebaseFirestore.getInstance();
@@ -50,7 +51,7 @@ public class ComentariosActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.vino_comentarios);
 
-        RatingBar rB = findViewById(R.id.ratingBarVino);
+        rB = findViewById(R.id.ratingBarVino);
         TextView tv = findViewById(R.id.nombreVino);
         ImageView iV = findViewById(R.id.imagenVino);
 
@@ -119,6 +120,7 @@ public class ComentariosActivity extends Activity {
                                             adaptador.notifyDataSetChanged();
                                             //ocultar el contenedor de la imagen de carga y mostrar el contenido
                                         }
+                                        rB.setRating(procesarMedia(listaComentarios));
                                     }
                                 });
                     }
@@ -126,5 +128,12 @@ public class ComentariosActivity extends Activity {
 
 
     }
-
+    float procesarMedia(List<ClaseComentario> list){
+        float med=0;
+        for(int i=0;i<list.size();i++){
+            med+=list.get(i).getValoracion();
+        }
+        med=med/list.size();
+        return med;
+    }
 }

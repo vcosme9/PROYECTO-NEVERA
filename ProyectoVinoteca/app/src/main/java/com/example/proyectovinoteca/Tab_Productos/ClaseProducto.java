@@ -34,4 +34,13 @@ public class ClaseProducto {
     public void setImagenId(int imagenId) {
         this.imagenId = imagenId;
     }
+
+    @Override
+    public String toString() {
+        return "ClaseProducto{" +
+                "nombre='" + nombre + '\'' +
+                ", info='" + info + '\'' +
+                ", imagenId=" + imagenId +
+                '}';
+    }
 }
