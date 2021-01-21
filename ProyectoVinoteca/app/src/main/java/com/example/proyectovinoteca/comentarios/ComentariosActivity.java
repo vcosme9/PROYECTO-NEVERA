@@ -10,6 +10,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
@@ -42,16 +43,22 @@ public class ComentariosActivity extends Activity {
     private final ArrayList<ClaseComentario> listaComentarios = new ArrayList<>();
     private final FirebaseFirestore db = FirebaseFirestore.getInstance();
     private ComentariosAdapter adaptador;
-
+    private Button nuevoComent;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.vino_comentarios);
-
         RatingBar rB = findViewById(R.id.ratingBarVino);
         TextView tv = findViewById(R.id.nombreVino);
         ImageView iV = findViewById(R.id.imagenVino);
-
+        nuevoComent = findViewById(R.id.comentBtn);
+        nuevoComent.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(getApplicationContext(), RatingComentarioActivity.class);
+                startActivity(i);
+            }
+        });
         try {
             float fl = getIntent().getFloatExtra("valoracion", 0);
             String n = getIntent().getStringExtra("nombre");
