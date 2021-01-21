@@ -34,16 +34,12 @@ import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-<<<<<<< HEAD
-=======
-import java.util.List;
->>>>>>> d457cdd6f3c83e0638266d89494f98d26167643e
 import java.util.Map;
 
 import static android.content.ContentValues.TAG;
 
 public class ComentariosActivity extends Activity {
-    private RatingBar rB;
+
     private RecyclerView recyclerView;
     private final ArrayList<ClaseComentario> listaComentarios = new ArrayList<>();
     private final FirebaseFirestore db = FirebaseFirestore.getInstance();
@@ -54,7 +50,7 @@ public class ComentariosActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.vino_comentarios);
 
-        rB = findViewById(R.id.ratingBarVino);
+        RatingBar rB = findViewById(R.id.ratingBarVino);
         TextView tv = findViewById(R.id.nombreVino);
         ImageView iV = findViewById(R.id.imagenVino);
 
@@ -116,11 +112,7 @@ public class ComentariosActivity extends Activity {
                         for (QueryDocumentSnapshot documentSnapshot : task.getResult()) {
                             mapeo.put(documentSnapshot.getString("nombre"),documentSnapshot.getId());
                         }
-<<<<<<< HEAD
                         String id = mapeo.get(getIntent().getStringExtra("nombre"));
-=======
-                         String id = mapeo.get(getIntent().getStringExtra("nombre"));
->>>>>>> d457cdd6f3c83e0638266d89494f98d26167643e
                         //referencia la coleccion de firebase
                         final CollectionReference comentarios = db.collection("coleccion").document("mis_vinos").collection("vinitos").document(id).collection("Comentarios");
 
@@ -140,31 +132,12 @@ public class ComentariosActivity extends Activity {
                                             adaptador.notifyDataSetChanged();
                                             //ocultar el contenedor de la imagen de carga y mostrar el contenido
                                         }
-<<<<<<< HEAD
-=======
-                                        rB.setRating(procesarMedia(listaComentarios));
->>>>>>> d457cdd6f3c83e0638266d89494f98d26167643e
                                     }
                                 });
                     }
                 });
-<<<<<<< HEAD
 
 
     }
 
 }
-=======
-
-
-    }
-    float procesarMedia(List<ClaseComentario> list){
-        float med=0;
-        for(int i=0;i<list.size();i++){
-            med+=list.get(i).getValoracion();
-        }
-        med=med/list.size();
-        return med;
-    }
-}
->>>>>>> d457cdd6f3c83e0638266d89494f98d26167643e
