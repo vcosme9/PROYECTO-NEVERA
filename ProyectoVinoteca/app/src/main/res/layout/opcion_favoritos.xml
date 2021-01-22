@@ -3,6 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:id="@+id/contenedor"
+    android:background="@drawable/fondoacuarela"
     android:layout_height="wrap_content">
 
     <LinearLayout
@@ -10,8 +11,15 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
+        <TextView
+            android:layout_marginLeft="16dp"
+            android:layout_marginTop="32dp"
+            android:textColor="#ffffff"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="20dp"
+            android:text="Novedades"/>
         <androidx.recyclerview.widget.RecyclerView xmlns:android="http://schemas.android.com/apk/res/android"
-            android:layout_marginTop="96dp"
             xmlns:app="http://schemas.android.com/apk/res-auto"
             android:id="@+id/recyclerView1"
             android:layout_width="match_parent"
@@ -29,12 +37,19 @@
             android:text="Ver más"
             android:textColor="#ffffff" />
 
+        <TextView
+            android:layout_marginLeft="16dp"
+            android:textColor="#ffffff"
+            android:layout_marginTop="32dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="20dp"
+            android:text="Mejor valorados"/>
         <androidx.recyclerview.widget.RecyclerView xmlns:android="http://schemas.android.com/apk/res/android"
             xmlns:app="http://schemas.android.com/apk/res-auto"
             android:id="@+id/recyclerView2"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="96dp"
             android:scrollbars="horizontal"
             app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
@@ -48,12 +63,19 @@
             android:text="Ver más"
             android:textColor="#ffffff" />
 
+        <TextView
+            android:layout_marginLeft="16dp"
+            android:textColor="#ffffff"
+            android:layout_marginTop="32dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="20dp"
+            android:text="Variedades"/>
         <androidx.recyclerview.widget.RecyclerView xmlns:android="http://schemas.android.com/apk/res/android"
             xmlns:app="http://schemas.android.com/apk/res-auto"
             android:id="@+id/recyclerView3"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="96dp"
             android:scrollbars="horizontal"
             app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 

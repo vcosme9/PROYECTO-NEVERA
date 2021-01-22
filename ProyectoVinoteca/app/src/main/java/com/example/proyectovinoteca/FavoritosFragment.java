@@ -73,7 +73,37 @@ public class FavoritosFragment extends Fragment {
             public void onClick(View v) {
                 Fragment fragment = new CatalogoFragment();
                 Bundle args = new Bundle();
+                filtro = "fecha";
+                args.putString("filtro", filtro);
+                fragment.setArguments(args);
+                FragmentManager fragmentManager = getFragmentManager();
+                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                fragmentTransaction.replace(R.id.container, fragment);
+                fragmentTransaction.commit();
+            }
+        });
+        Button b2 = v.findViewById(R.id.btn_ver_mas_2);
+        b2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Fragment fragment = new CatalogoFragment();
+                Bundle args = new Bundle();
                 filtro = "valoracion";
+                args.putString("filtro", filtro);
+                fragment.setArguments(args);
+                FragmentManager fragmentManager = getFragmentManager();
+                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                fragmentTransaction.replace(R.id.container, fragment);
+                fragmentTransaction.commit();
+            }
+        });
+        Button b3 = v.findViewById(R.id.btn_ver_mas_3);
+        b3.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Fragment fragment = new CatalogoFragment();
+                Bundle args = new Bundle();
+                filtro = "tipo";
                 args.putString("filtro", filtro);
                 fragment.setArguments(args);
                 FragmentManager fragmentManager = getFragmentManager();

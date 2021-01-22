@@ -36,6 +36,7 @@
         </LinearLayout>
     </RelativeLayout>
     <TextView
+        android:textColor="#ffffff"
         android:id="@+id/nombre"
         android:text="nombre"
         android:layout_gravity="center"

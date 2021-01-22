@@ -20,6 +20,10 @@
         android:icon="@drawable/ic_custom_menu_map"
         android:title="Guía" />
     <item
+        android:id="@+id/op6"
+        android:icon="@drawable/camara"
+        android:title="Cámara" />
+    <item
         android:title=""
         android:enabled="false"/>
     <group
