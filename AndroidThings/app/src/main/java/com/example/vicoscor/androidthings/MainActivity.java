@@ -1,8 +1,6 @@
 package com.example.vicoscor.androidthings;
 
 import android.app.Activity;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
@@ -13,10 +11,7 @@ import com.example.vicoscor.comun.Mqtt;
 import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
@@ -33,13 +28,11 @@ import org.eclipse.paho.client.mqttv3.MqttException;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
 import org.eclipse.paho.client.mqttv3.persist.MemoryPersistence;
 
-import java.io.UnsupportedEncodingException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
-
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -56,6 +49,7 @@ public class MainActivity extends Activity implements MqttCallback, OnPictureAva
     String fecha;
     int health = 10;
     private InitializeCamera mInitializeCamera;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -174,7 +168,7 @@ public class MainActivity extends Activity implements MqttCallback, OnPictureAva
             @Override
             public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
                 Log.d("aaaaaaaaaaaaaaaaa", "hola como estas");
-                if(value.getDocumentChanges().get(0).getDocument().get("Magnetico").toString().equals("Puerta abierta")){
+                if (value.getDocumentChanges().get(0).getDocument().get("Magnetico").toString().equals("Puerta abierta")) {
                     mInitializeCamera.captureImage();
                     Log.d("aaaaaaaaaaaaaaaaa2", "puetas abiertrwsa");
                 }
@@ -224,10 +218,10 @@ public class MainActivity extends Activity implements MqttCallback, OnPictureAva
         if (topic.equals(topicRoot + "SensorMagnetico")) {
             Log.d(Mqtt.TAG, "Recibiendo: " + topic + "->" + payload);
 
-            if(payload.equals("Puerta abierta")){
+            if (payload.equals("Puerta abierta")) {
                 enviarValor("ON");
             }
-            if(payload.equals("Puerta Cerrada")){
+            if (payload.equals("Puerta Cerrada")) {
                 enviarValor("OFF");
             }
 
@@ -235,7 +229,6 @@ public class MainActivity extends Activity implements MqttCallback, OnPictureAva
             sensorMagnetico.put("Magnetico", payload);
             sensorMagnetico.put("Fecha", fecha);
             db.collection("SENSORES").document("Sensor_Magnetico").collection("Magnetico").add(sensorMagnetico);
-
 
 
         }
@@ -249,12 +242,12 @@ public class MainActivity extends Activity implements MqttCallback, OnPictureAva
         }
     }
 
-    public void enviarValor(String valor){
+    public void enviarValor(String valor) {
         try {
             MqttMessage message = new MqttMessage(valor.getBytes());
             message.setQos(Mqtt.qos);
             message.setRetained(false);
-            client.publish(topicRoot+"cmnd/POWER", message);
+            client.publish(topicRoot + "cmnd/POWER", message);
         } catch (MqttException e) {
             Log.e(Mqtt.TAG, "Error al publicar.", e);
         }
@@ -269,15 +262,8 @@ public class MainActivity extends Activity implements MqttCallback, OnPictureAva
     public void onPictureAvailable(byte[] imageBytes) {
         final String referencia = "Foto/" + System.currentTimeMillis();
         final StorageReference ref = storageRef.child(referencia);
-        String s = null;
-        try {
-            s = new String(imageBytes, "UTF-8");
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        }
-        Uri uri = Uri.parse(s);
-        UploadTask uploadTask = ref.putFile(uri);
-        Task<Uri> urlTask = uploadTask.continueWithTask(
+        UploadTask uploadTask = ref.putBytes(imageBytes);
+        uploadTask.continueWithTask(
                 new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
                     @Override
                     public Task<Uri> then(
